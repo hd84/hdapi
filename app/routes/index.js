@@ -66,9 +66,6 @@ router.get('/func', function (req, res) {
   res.render('func', { title: 'func' });
 });
 
-router.get('/cookie', function (req, res) {
-  res.render('cookie');
-});
 
 
 
