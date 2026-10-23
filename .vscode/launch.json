@@ -1,0 +1,32 @@
+{
+  // IntelliSense를 사용하여 가능한 특성에 대해 알아보세요.
+  // 기존 특성에 대한 설명을 보려면 가리킵니다.
+  // 자세한 내용을 보려면 https://go.microsoft.com/fwlink/?linkid=830387을(를) 방문하세요.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "MacOsX",
+      "request": "launch",
+      "type": "node",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/start.js",
+      "args": ["--config", "config_mac.json"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "windows 11",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\start.js",
+      "args": ["--config", "config.json"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "windows 11 unityreq",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\start.js",
+      "args": ["--config", "config.json", "--mode", "unityreq"]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Restful",
+  "version": "261020A",
+  
+  "server_env": "local",
+  "serverIP": "127.0.0.1",
+  "serverPORT": 11112,
+  
+  
+  "loglevel": 3,
+  "db_loglevel": 3,
+
+  "db_config": "db.json",
+
+  "session_use": 1,
+  "session_expire": 3600,
+  "session_cheat" : "testman"
+}

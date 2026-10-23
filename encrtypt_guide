@@ -1,0 +1,13 @@
+var addr = './json/TB_INTRO_VOICE.ejs';
+    var ejsdata;
+    fs.readFile( addr, function read(err, data ) {
+        if( err ) 
+        {
+            throw err;
+        }        
+
+        ejsdata = data;
+
+        var decr = mcrypt.decrypt( ejsdata, null, 'ZKEncode!@3456&*', 'rijndael-128', 'cbc' );
+        var a = 0;
+    })

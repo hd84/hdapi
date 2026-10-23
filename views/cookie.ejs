@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>쿠키 정보 뷰어</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      padding: 30px;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-bar input:focus {
+      border-color: #3498db;
+    }
+
+    .search-bar button {
+      padding: 10px 20px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .search-bar button:hover {
+      background: #2980b9;
+    }
+
+    .info-box {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      color: #856404;
+      display: none;
+    }
+
+    .info-box.visible { display: block; }
+
+    .summary {
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    thead {
+      background: #2c3e50;
+      color: #fff;
+    }
+
+    thead th {
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    tbody tr:nth-child(even) { background: #f8f9fa; }
+    tbody tr:hover { background: #eaf4fb; }
+
+    tbody td {
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid #e9ecef;
+      word-break: break-all;
+      max-width: 300px;
+    }
+
+    .copy-btn {
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .copy-btn:hover { background: #218838; }
+    .copy-btn.copied { background: #6c757d; }
+
+    .empty-msg {
+      text-align: center;
+      padding: 40px;
+      color: #888;
+      font-size: 0.9rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+
+    .filter-bar input {
+      padding: 7px 12px;
+      font-size: 0.85rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      width: 240px;
+    }
+
+    .filter-bar input:focus { border-color: #3498db; }
+
+    .badge {
+      display: inline-block;
+      background: #3498db;
+      color: #fff;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-size: 0.8rem;
+      margin-left: 6px;
+    }
+
+    .spinner {
+      display: none;
+      width: 28px;
+      height: 28px;
+      border: 3px solid #ddd;
+      border-top-color: #3498db;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 40px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .tag-puppeteer { background: #6f42c1; color: #fff; }
+    .tag-local     { background: #17a2b8; color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>🍪 쿠키 정보 뷰어</h1>
+
+  <div class="search-bar">
+    <input type="text" id="urlInput" placeholder="URL을 입력하세요 (예: https://example.com)" />
+    <button onclick="loadCookies()">쿠키 불러오기</button>
+  </div>
+
+  <div class="info-box" id="infoBox">
+    🔍 다른 도메인은 서버(Puppeteer)를 통해 실제 접속 후 쿠키를 조회합니다. 잠시 기다려주세요.
+  </div>
+
+  <div class="filter-bar" id="filterBar" style="display:none">
+    <input type="text" id="filterInput" placeholder="이름 또는 값으로 필터..." oninput="filterTable()" />
+    <span id="countBadge" class="badge">0개</span>
+  </div>
+
+  <div class="summary" id="summary"></div>
+  <div id="spinner" class="spinner"></div>
+  <div id="resultArea"></div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('urlInput').value = location.href;
+      loadCookies();
+    });
+
+    async function loadCookies() {
+      const url = document.getElementById('urlInput').value.trim();
+      if (!url) { alert('URL을 입력해주세요.'); return; }
+
+      let inputOrigin;
+      try {
+        inputOrigin = new URL(url).origin;
+      } catch (e) {
+        alert('유효하지 않은 URL입니다.');
+        return;
+      }
+
+      console.log('[COOKIE-VIEW] 쿠키 조회 시작:', url);
+      const isSameOrigin = (inputOrigin === location.origin);
+      console.log('[COOKIE-VIEW] Same Origin:', isSameOrigin, '입력:', inputOrigin, '현재:', location.origin);
+      
+      document.getElementById('infoBox').classList.toggle('visible', !isSameOrigin);
+
+      if (isSameOrigin) {
+        console.log('[COOKIE-VIEW] 로컬 쿠키 조회');
+        allCookies = parseDomCookies();
+        currentMode = 'local';
+        document.getElementById('filterBar').style.display = allCookies.length > 0 ? 'flex' : 'none';
+        document.getElementById('filterInput').value = '';
+        renderTable(allCookies);
+      } else {
+        console.log('[COOKIE-VIEW] Puppeteer 쿠키 조회 시작');
+        await fetchViaPuppeteer(url);
+      }
+    }
+
+    async function fetchViaPuppeteer(url) {
+      setLoading(true);
+      try {
+        console.log('[COOKIE-VIEW] Puppeteer API 호출:', url);
+        const resp = await fetch('/api/cookie-probe?url=' + encodeURIComponent(url));
+        const data = await resp.json();
+        
+        console.log('[COOKIE-VIEW] 응답 상태:', resp.status);
+        console.log('[COOKIE-VIEW] 응답 데이터:', data);
+        
+        if (!resp.ok) throw new Error(data.error || resp.statusText);
+
+        const cookiesArray = data.cookies || [];
+        console.log('[COOKIE-VIEW] 쿠키 개수:', cookiesArray.length);
+        
+        if (!Array.isArray(cookiesArray)) {
+          throw new Error('쿠키 데이터가 배열이 아닙니다: ' + typeof cookiesArray);
+        }
+
+        allCookies = cookiesArray.map(function (c) {
+          if (!c || typeof c !== 'object') {
+            console.warn('[COOKIE-VIEW] 잘못된 쿠키 데이터:', c);
+            return { name: '', value: '', extra: c };
+          }
+          return { 
+            name: c.name || '', 
+            value: c.value || '', 
+            extra: c 
+          };
+        });
+        
+        console.log('[COOKIE-VIEW] 매핑된 쿠키:', allCookies);
+        
+        currentMode = 'puppeteer';
+        document.getElementById('filterBar').style.display = allCookies.length > 0 ? 'flex' : 'none';
+        document.getElementById('filterInput').value = '';
+        renderTable(allCookies);
+      } catch (e) {
+        console.error('[COOKIE-VIEW] 에러:', e);
+        document.getElementById('resultArea').innerHTML =
+          '<div class="empty-msg">❌ 오류: ' + escapeHtml(e.message) + '</div>';
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function setLoading(on) {
+      document.getElementById('spinner').style.display = on ? 'block' : 'none';
+      document.getElementById('resultArea').innerHTML = '';
+      document.getElementById('summary').textContent = '';
+      document.getElementById('filterBar').style.display = 'none';
+    }
+
+    function parseDomCookies() {
+      const raw = document.cookie;
+      if (!raw || raw.trim() === '') return [];
+      return raw.split(';').map(function (item) {
+        const eqIdx = item.indexOf('=');
+        if (eqIdx === -1) return { name: item.trim(), value: '' };
+        return {
+          name: item.substring(0, eqIdx).trim(),
+          value: decodeURISafely(item.substring(eqIdx + 1).trim())
+        };
+      }).filter(function (c) { return c.name !== ''; });
+    }
+
+    function decodeURISafely(val) {
+      try { return decodeURIComponent(val); } catch (e) { return val; }
+    }
+
+    let allCookies = [];
+    let currentMode = 'local';
+
+    function filterTable() {
+      const keyword = document.getElementById('filterInput').value.toLowerCase();
+      const filtered = allCookies.filter(function (c) {
+        return c.name.toLowerCase().includes(keyword) || c.value.toLowerCase().includes(keyword);
+      });
+      renderTable(filtered);
+    }
+
+    function renderTable(cookies) {
+      const area = document.getElementById('resultArea');
+      const summary = document.getElementById('summary');
+      const badge = document.getElementById('countBadge');
+
+      if (badge) badge.textContent = cookies.length + '개';
+
+      if (cookies.length === 0) {
+        summary.textContent = '';
+        area.innerHTML = '<div class="empty-msg">표시할 쿠키가 없습니다.<br>이 페이지에 설정된 쿠키가 없거나 HttpOnly 쿠키는 JavaScript로 접근할 수 없습니다.</div>';
+        return;
+      }
+
+      const modeTag = currentMode === 'puppeteer'
+        ? '<span class="tag tag-puppeteer">Puppeteer</span>'
+        : '<span class="tag tag-local">현재 페이지</span>';
+      summary.innerHTML = '총 ' + cookies.length + '개의 쿠키 ' + modeTag;
+
+      let html = '<table>';
+      html += '<thead><tr>'
+            + '<th>#</th>'
+            + '<th>이름 (Name)</th>'
+            + '<th>값 (Value)</th>'
+            + (currentMode === 'puppeteer' ? '<th>도메인</th><th>Path</th><th>HttpOnly</th><th>Secure</th>' : '')
+            + '<th>이름 복사</th>'
+            + '<th>값 복사</th>'
+            + '<th>전체 복사</th>'
+            + '</tr></thead><tbody>';
+
+      cookies.forEach(function (cookie, idx) {
+        const safeName  = escapeHtml(cookie.name);
+        const safeValue = escapeHtml(cookie.value);
+        const ex = cookie.extra || {};
+        const extraCols = currentMode === 'puppeteer'
+          ? '<td>' + escapeHtml(ex.domain || '') + '</td>'
+            + '<td>' + escapeHtml(ex.path || '') + '</td>'
+            + '<td>' + (ex.httpOnly ? '✓' : '') + '</td>'
+            + '<td>' + (ex.secure   ? '✓' : '') + '</td>'
+          : '';
+        html += '<tr>'
+              + '<td>' + (idx + 1) + '</td>'
+              + '<td><strong>' + safeName + '</strong></td>'
+              + '<td>' + safeValue + '</td>'
+              + extraCols
+              + '<td><button class="copy-btn" onclick="copyText(' + JSON.stringify(cookie.name) + ', this)">복사</button></td>'
+              + '<td><button class="copy-btn" onclick="copyText(' + JSON.stringify(cookie.value) + ', this)">복사</button></td>'
+              + '<td><button class="copy-btn" onclick="copyText(' + JSON.stringify(cookie.name + '=' + cookie.value) + ', this)">복사</button></td>'
+              + '</tr>';
+      });
+
+      html += '</tbody></table>';
+      area.innerHTML = html;
+    }
+
+    function copyText(text, btn) {
+      if (!navigator.clipboard) {
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try { document.execCommand('copy'); } catch(e) {}
+        document.body.removeChild(ta);
+        showCopied(btn);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(function () {
+        showCopied(btn);
+      }).catch(function () {
+        alert('클립보드 복사에 실패했습니다.');
+      });
+    }
+
+    function showCopied(btn) {
+      const original = btn.textContent;
+      btn.textContent = '✓ 완료';
+      btn.classList.add('copied');
+      setTimeout(function () {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1500);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>

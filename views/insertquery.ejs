@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INSERT 쿼리 병합기</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1e1e2e;
+      color: #cdd6f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 32px 16px;
+      gap: 20px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      color: #cba6f7;
+      letter-spacing: 0.03em;
+    }
+
+    .section {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: #a6adc8;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    textarea {
+      width: 100%;
+      height: 280px;
+      background: #181825;
+      border: 1px solid #313244;
+      border-radius: 8px;
+      color: #cdd6f4;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      padding: 12px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    textarea:focus { border-color: #cba6f7; }
+
+    .btn-row {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .batch-options {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #181825;
+      border: 1px solid #313244;
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+
+    .batch-options label {
+      font-size: 0.85rem;
+      color: #cdd6f4;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .batch-options input[type="checkbox"] {
+      accent-color: #cba6f7;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 10px 32px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    button:active { transform: scale(0.97); }
+
+    #btnConvert {
+      background: #cba6f7;
+      color: #1e1e2e;
+      font-size: 1rem;
+      padding: 12px 48px;
+    }
+    #btnConvert:hover { background: #b48ef0; }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #btnCopy {
+      background: #313244;
+      color: #cdd6f4;
+      font-size: 0.8rem;
+      padding: 6px 16px;
+    }
+    #btnCopy:hover { background: #45475a; }
+    #btnCopy.copied { background: #a6e3a1; color: #1e1e2e; }
+
+    #status {
+      font-size: 0.8rem;
+      color: #a6e3a1;
+      min-height: 1.2em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>INSERT 쿼리 병합기</h1>
+
+  <div class="section">
+    <label>입력 — INSERT 쿼리 붙여넣기</label>
+    <textarea id="inputArea" placeholder="INSERT INTO `table` (...) VALUES (...);&#10;INSERT INTO `table` (...) VALUES (...);&#10;..."></textarea>
+  </div>
+
+  <div class="btn-row">
+    <div class="batch-options" aria-label="변환 단위">
+      <label><input type="checkbox" name="batchSize" value="10">10개</label>
+      <label><input type="checkbox" name="batchSize" value="50">50개</label>
+      <label><input type="checkbox" name="batchSize" value="100">100개</label>
+      <label><input type="checkbox" name="batchSize" value="1000">1000개</label>
+      <label><input type="checkbox" name="batchSize" value="all" checked>전체</label>
+    </div>
+    <button id="btnConvert">변환</button>
+  </div>
+
+  <div class="section">
+    <div class="output-header">
+      <label>출력 — 변환된 INSERT 쿼리</label>
+      <button id="btnCopy">📋 클립보드 복사</button>
+    </div>
+    <textarea id="outputArea" readonly placeholder="변환 결과가 여기에 표시됩니다."></textarea>
+  </div>
+
+  <div id="status"></div>
+
+  <script>
+    const inputArea  = document.getElementById('inputArea');
+    const outputArea = document.getElementById('outputArea');
+    const batchOptions = document.querySelectorAll('input[name="batchSize"]');
+    const btnConvert = document.getElementById('btnConvert');
+    const btnCopy    = document.getElementById('btnCopy');
+    const status     = document.getElementById('status');
+
+    batchOptions.forEach((option) => {
+      option.addEventListener('change', (event) => {
+        if (event.target.checked) {
+          batchOptions.forEach((other) => {
+            if (other !== event.target) other.checked = false;
+          });
+          return;
+        }
+
+        const hasChecked = Array.from(batchOptions).some((o) => o.checked);
+        if (!hasChecked) {
+          event.target.checked = true;
+        }
+      });
+    });
+
+    btnConvert.addEventListener('click', () => {
+      const raw = inputArea.value.trim();
+      if (!raw) { showStatus('입력값이 없습니다.', '#f38ba8'); return; }
+
+      // 줄 단위로 분리 → 빈 줄 제거
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+
+      let header = null;
+      const valueTuples = [];
+
+      for (const line of lines) {
+        // case-insensitive match for INSERT INTO ... VALUES (...)
+        const m = line.match(/^INSERT\s+INTO\s+(.+?)\s+VALUES\s+(\(.*\))\s*;?\s*$/i);
+        if (!m) continue;
+
+        if (!header) {
+          // 첫 번째 줄에서 테이블+컬럼 부분 추출
+          header = `INSERT INTO ${m[1]} VALUES`;
+        }
+
+        // 마지막 세미콜론 제거 후 tuple 저장
+        valueTuples.push(m[2].replace(/;\s*$/, ''));
+      }
+
+      if (!header || valueTuples.length === 0) {
+        showStatus('유효한 INSERT 쿼리를 찾지 못했습니다.', '#f38ba8');
+        return;
+      }
+
+      const selectedOption = Array.from(batchOptions).find((o) => o.checked);
+      const selected = selectedOption ? selectedOption.value : 'all';
+      const chunkSize = selected === 'all' ? valueTuples.length : Number(selected);
+      const statements = [];
+
+      for (let i = 0; i < valueTuples.length; i += chunkSize) {
+        const chunk = valueTuples.slice(i, i + chunkSize);
+        const stmt = header + '\n' + chunk.join(',\n') + ';';
+        statements.push(stmt);
+      }
+
+      outputArea.value = statements.join('\n\n');
+      showStatus(`총 ${valueTuples.length}건을 ${statements.length}개 쿼리로 변환 완료.`, '#a6e3a1');
+    });
+
+    btnCopy.addEventListener('click', () => {
+      const text = outputArea.value;
+      if (!text) { showStatus('복사할 내용이 없습니다.', '#f38ba8'); return; }
+
+      navigator.clipboard.writeText(text).then(() => {
+        btnCopy.textContent = '✅ 복사됨';
+        btnCopy.classList.add('copied');
+        showStatus('클립보드에 복사되었습니다.', '#a6e3a1');
+        setTimeout(() => {
+          btnCopy.textContent = '📋 클립보드 복사';
+          btnCopy.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        // fallback
+        outputArea.select();
+        document.execCommand('copy');
+        showStatus('클립보드에 복사되었습니다.', '#a6e3a1');
+      });
+    });
+
+    function showStatus(msg, color) {
+      status.style.color = color;
+      status.textContent = msg;
+      setTimeout(() => { status.textContent = ''; }, 3000);
+    }
+  </script>
+</body>
+</html>

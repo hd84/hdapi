@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XLSX to JSON</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --bg-top: #f4efe6;
+      --bg-bottom: #dce7f2;
+      --panel: rgba(255, 255, 255, 0.82);
+      --panel-strong: rgba(255, 255, 255, 0.95);
+      --text-main: #18212b;
+      --text-sub: #526071;
+      --accent: #0b7a75;
+      --accent-strong: #095c58;
+      --border: rgba(24, 33, 43, 0.12);
+      --shadow: 0 24px 60px rgba(38, 56, 78, 0.14);
+      --danger: #c44d3b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top left, rgba(11, 122, 117, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(196, 77, 59, 0.14), transparent 22%),
+        linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+      padding: 32px 20px 48px;
+    }
+
+    .page {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero,
+    .panel {
+      backdrop-filter: blur(14px);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(11, 122, 117, 0.1);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      margin: 16px 0 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 720px;
+      color: var(--text-sub);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .panel {
+      padding: 22px;
+    }
+
+    .panel-title {
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .panel-subtitle {
+      margin: 0 0 18px;
+      color: var(--text-sub);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .upload-box {
+      border: 1.5px dashed rgba(11, 122, 117, 0.35);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.68);
+      padding: 20px;
+    }
+
+    .upload-box input,
+    .upload-box select,
+    .upload-box button,
+    .upload-box a {
+      width: 100%;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+
+    .input,
+    .select {
+      border: 1px solid rgba(24, 33, 43, 0.12);
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px 14px;
+      font: inherit;
+      color: var(--text-main);
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .button,
+    .button-secondary {
+      border: none;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .button {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 14px 24px rgba(11, 122, 117, 0.24);
+    }
+
+    .button:hover {
+      background: var(--accent-strong);
+      transform: translateY(-1px);
+    }
+
+    .button-secondary {
+      background: rgba(24, 33, 43, 0.07);
+      color: var(--text-main);
+    }
+
+    .button-secondary:hover {
+      background: rgba(24, 33, 43, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .meta-card {
+      border-radius: 18px;
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
+      padding: 16px;
+    }
+
+    .meta-card.file-meta {
+      grid-column: 1 / -1;
+    }
+
+    .meta-label {
+      color: var(--text-sub);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      margin-top: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .json-box {
+      min-height: 420px;
+      max-height: 720px;
+      overflow: auto;
+      border-radius: 18px;
+      background: #11181f;
+      color: #e8f0f7;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8aa0b5;
+    }
+
+    .hint-list {
+      margin: 16px 0 0;
+      padding-left: 18px;
+      color: var(--text-sub);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 920px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .result-header {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 18px 12px 32px;
+      }
+
+      .hero,
+      .panel {
+        border-radius: 18px;
+      }
+
+      .button-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <span class="eyebrow">XLSX Utility</span>
+      <h1>엑셀 파일을 JSON으로 바로 변환</h1>
+      <p>xlsx 파일을 브라우저에서 바로 읽어 시트별 JSON 데이터를 생성합니다. 서버 업로드 없이 현재 페이지에서 처리하므로 빠르게 확인하고 복사하거나 파일로 저장할 수 있습니다.</p>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel">
+        <h2 class="panel-title">파일 업로드</h2>
+        <p class="panel-subtitle">.xlsx 또는 .xls 파일을 선택한 뒤, 변환할 시트를 고르고 JSON 결과를 확인하세요.</p>
+
+        <div class="upload-box">
+          <label class="field-label" for="fileInput">엑셀 파일</label>
+          <input class="input" id="fileInput" type="file" accept=".xlsx,.xls" />
+
+          <div class="stack">
+            <div>
+              <label class="field-label" for="sheetUrlInput">구글 스프레드시트 URL</label>
+              <input class="input" id="sheetUrlInput" type="url" placeholder="https://docs.google.com/spreadsheets/d/..." />
+            </div>
+            <button class="button-secondary" id="loadUrlButton" type="button">URL로 불러오기</button>
+          </div>
+
+          <div class="stack">
+            <div>
+              <label class="field-label" for="sheetSelect">시트 선택</label>
+              <select class="select" id="sheetSelect" disabled>
+                <option value="">파일을 먼저 선택하세요</option>
+              </select>
+            </div>
+
+            <div class="button-row">
+              <button class="button" id="convertButton" type="button" disabled>JSON 변환</button>
+              <button class="button-secondary" id="copyButton" type="button" disabled>결과 복사</button>
+            </div>
+
+            <a class="button-secondary" id="downloadButton" href="#" download="sheet.json" aria-disabled="true">JSON 다운로드</a>
+          </div>
+
+          <div class="status" id="statusText">파일을 선택하면 시트 목록을 불러옵니다.</div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-card file-meta">
+            <div class="meta-label">파일명</div>
+            <div class="meta-value" id="fileName">-</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">시트 수</div>
+            <div class="meta-value" id="sheetCount">0</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">행 수</div>
+            <div class="meta-value" id="rowCount">0</div>
+          </div>
+        </div>
+
+        <ul class="hint-list">
+          <li>첫 행이 헤더인 형태를 기준으로 JSON 객체 배열로 변환합니다.</li>
+          <li>빈 셀도 키를 유지하도록 처리합니다.</li>
+          <li>구글 스프레드시트 URL은 공개 공유(링크 보기 가능)된 문서여야 불러올 수 있습니다.</li>
+          <li>결과는 복사하거나 .json 파일로 내려받을 수 있습니다.</li>
+        </ul>
+      </aside>
+
+      <main class="panel">
+        <div class="result-header">
+          <div>
+            <h2 class="panel-title">변환 결과</h2>
+            <p class="panel-subtitle">선택한 시트의 데이터가 JSON 문자열로 표시됩니다.</p>
+          </div>
+        </div>
+        <pre class="json-box empty" id="jsonOutput">아직 변환된 데이터가 없습니다.</pre>
+      </main>
+    </section>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const sheetSelect = document.getElementById('sheetSelect');
+    const convertButton = document.getElementById('convertButton');
+    const copyButton = document.getElementById('copyButton');
+    const downloadButton = document.getElementById('downloadButton');
+    const sheetUrlInput = document.getElementById('sheetUrlInput');
+    const loadUrlButton = document.getElementById('loadUrlButton');
+    const jsonOutput = document.getElementById('jsonOutput');
+    const statusText = document.getElementById('statusText');
+    const fileName = document.getElementById('fileName');
+    const sheetCount = document.getElementById('sheetCount');
+    const rowCount = document.getElementById('rowCount');
+
+    let workbook = null;
+    let jsonText = '';
+
+    function setStatus(message, isError) {
+      statusText.textContent = message;
+      statusText.className = isError ? 'status error' : 'status';
+    }
+
+    function setDownloadLink(text, selectedSheetName) {
+      if (!text) {
+        downloadButton.href = '#';
+        downloadButton.setAttribute('aria-disabled', 'true');
+        downloadButton.removeAttribute('data-ready');
+        downloadButton.download = 'sheet.json';
+        return;
+      }
+
+      const blob = new Blob([text], { type: 'application/json;charset=utf-8' });
+      const blobUrl = URL.createObjectURL(blob);
+      downloadButton.href = blobUrl;
+      downloadButton.download = `${selectedSheetName || 'sheet'}.json`;
+      downloadButton.setAttribute('data-ready', 'true');
+      downloadButton.setAttribute('aria-disabled', 'false');
+    }
+
+    function resetOutput() {
+      jsonText = '';
+      rowCount.textContent = '0';
+      jsonOutput.textContent = '아직 변환된 데이터가 없습니다.';
+      jsonOutput.classList.add('empty');
+      copyButton.disabled = true;
+      setDownloadLink('', '');
+    }
+
+    function renderSheetOptions(names) {
+      sheetSelect.innerHTML = names.map((name, index) => {
+        const selected = index === 0 ? 'selected' : '';
+        return `<option value="${name}" ${selected}>${name}</option>`;
+      }).join('');
+      sheetSelect.disabled = names.length === 0;
+      convertButton.disabled = names.length === 0;
+      sheetCount.textContent = String(names.length);
+    }
+
+    function readWorkbook(file) {
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        try {
+          const data = new Uint8Array(event.target.result);
+          workbook = XLSX.read(data, { type: 'array' });
+          renderSheetOptions(workbook.SheetNames);
+          setStatus('시트 목록을 불러왔습니다. 변환할 시트를 선택하세요.', false);
+        } catch (error) {
+          workbook = null;
+          renderSheetOptions([]);
+          resetOutput();
+          setStatus('엑셀 파일을 읽는 중 오류가 발생했습니다.', true);
+        }
+      };
+
+      reader.onerror = function() {
+        workbook = null;
+        renderSheetOptions([]);
+        resetOutput();
+        setStatus('파일을 읽지 못했습니다.', true);
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    function extractSpreadsheetId(url) {
+      const trimmed = (url || '').trim();
+      if (!trimmed) {
+        return '';
+      }
+
+      const matched = trimmed.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+      if (matched && matched[1]) {
+        return matched[1];
+      }
+
+      const fallback = trimmed.match(/^([a-zA-Z0-9-_]{20,})$/);
+      return fallback ? fallback[1] : '';
+    }
+
+    async function loadWorkbookFromUrl() {
+      const sheetUrl = sheetUrlInput.value;
+      const spreadsheetId = extractSpreadsheetId(sheetUrl);
+
+      if (!spreadsheetId) {
+        setStatus('유효한 구글 스프레드시트 URL을 입력하세요.', true);
+        return;
+      }
+
+      resetOutput();
+      setStatus('구글 스프레드시트를 불러오는 중입니다.', false);
+
+      try {
+        const exportUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=xlsx`;
+        const response = await fetch(exportUrl, { method: 'GET' });
+
+        if (!response.ok) {
+          throw new Error('HTTP error');
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        workbook = XLSX.read(data, { type: 'array' });
+
+        renderSheetOptions(workbook.SheetNames);
+        fileName.textContent = `Google Sheet (${spreadsheetId.slice(0, 8)}...)`;
+        setStatus('URL에서 시트 목록을 불러왔습니다. 변환할 시트를 선택하세요.', false);
+      } catch (error) {
+        workbook = null;
+        renderSheetOptions([]);
+        fileName.textContent = '-';
+        setStatus('URL에서 스프레드시트를 읽지 못했습니다. 공개 공유 설정(링크가 있는 사용자 보기 가능)을 확인하세요.', true);
+      }
+    }
+
+    function convertSelectedSheet() {
+      if (!workbook) {
+        setStatus('먼저 엑셀 파일을 선택하세요.', true);
+        return;
+      }
+
+      const selectedSheetName = sheetSelect.value;
+      const worksheet = workbook.Sheets[selectedSheetName];
+
+      if (!worksheet) {
+        setStatus('선택한 시트를 찾을 수 없습니다.', true);
+        return;
+      }
+
+      const rows = XLSX.utils.sheet_to_json(worksheet, {
+        defval: '',
+        raw: false
+      });
+
+      jsonText = JSON.stringify(rows, null, 2);
+      jsonOutput.textContent = jsonText || '[]';
+      jsonOutput.classList.remove('empty');
+      rowCount.textContent = String(rows.length);
+      copyButton.disabled = false;
+      setDownloadLink(jsonText || '[]', selectedSheetName);
+      setStatus(`변환 완료: ${selectedSheetName} 시트, ${rows.length}행`, false);
+    }
+
+    async function copyJson() {
+      if (!jsonText) {
+        setStatus('복사할 JSON 데이터가 없습니다.', true);
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(jsonText);
+        setStatus('JSON 데이터를 클립보드에 복사했습니다.', false);
+      } catch (error) {
+        setStatus('클립보드 복사에 실패했습니다.', true);
+      }
+    }
+
+    fileInput.addEventListener('change', function(event) {
+      const selectedFile = event.target.files[0];
+      resetOutput();
+
+      if (!selectedFile) {
+        workbook = null;
+        fileName.textContent = '-';
+        sheetCount.textContent = '0';
+        renderSheetOptions([]);
+        setStatus('파일 선택이 취소되었습니다.', false);
+        return;
+      }
+
+      fileName.textContent = selectedFile.name;
+      setStatus('엑셀 파일을 읽는 중입니다.', false);
+      readWorkbook(selectedFile);
+    });
+
+    loadUrlButton.addEventListener('click', loadWorkbookFromUrl);
+    sheetUrlInput.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        loadWorkbookFromUrl();
+      }
+    });
+
+    convertButton.addEventListener('click', convertSelectedSheet);
+    copyButton.addEventListener('click', copyJson);
+    downloadButton.addEventListener('click', function(event) {
+      if (!downloadButton.dataset.ready) {
+        event.preventDefault();
+        setStatus('먼저 JSON으로 변환하세요.', true);
+      }
+    });
+  </script>
+</body>
+</html>

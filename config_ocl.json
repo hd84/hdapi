@@ -1,0 +1,13 @@
+{
+  "name": "Restful",
+  "version": "261020A",  
+  
+  "server_env": "oci",
+  "serverIP": "127.0.0.1",
+  "serverPORT": 20090,
+  
+  "loglevel": 3,
+  "db_loglevel": 3,
+
+  "db_config": "db_ocl.json"
+}

@@ -1,0 +1,16 @@
+ios 검증 
+
+검증 주소 
+샌드박스 : https://sandbox.itunes.apple.com/verifyReceipt
+출시 : https://buy.itunes.apple.com/verifyReceipt
+
+post 전송 데이터
+{"receipt-data" : "[receiptpayload값]"}
+
+
+
+
+aos
+oauth-receipt
+ClientID : 275938872870-b27pa85ds79vccp7mhbp22o818sf7lp1.apps.googleusercontent.com
+ClientSecret : wZWEdlLKATCukzDoItS-PJtT

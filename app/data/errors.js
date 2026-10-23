@@ -1,0 +1,16 @@
+
+const ERROR_CODE = Object.freeze({
+  ERROR: -1,
+  SUCCESS: 0,
+  NOT_FOUND_SESSION: 10,
+  NOT_FOUND_CH_ID : 100,
+  NOT_FOUND_USER: 1000,
+  FAILED_CREATE_SESSION: 1001,  
+  INVALID_PARAMETER: 9998,
+  UNDEFINED_ERROR: 9999,
+});
+
+
+module.exports = {  
+  ERROR_CODE,  
+};

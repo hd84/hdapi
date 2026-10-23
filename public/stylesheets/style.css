@@ -1,0 +1,117 @@
+
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    color: orange;
+    text-align: left;
+}
+
+a {
+  color: #00B7FF;
+}
+
+p.normal {
+    font-style: normal;
+}
+
+p.italic {
+    font-style: italic;
+}
+
+p.oblique {
+    font-style: oblique;
+}
+
+p.big30 {
+    font-style: normal;
+    font-size: 30px;    
+}
+
+p.big64 {
+    font-style: normal;
+    font-size: 64px;    
+}
+
+.mason_container {
+  background: white;
+  width: 100%;  
+}
+
+.item2 {
+  width:  44%;
+  height: 320px;
+  float: left;
+  background: white;
+  margin-left: 0px;
+  margin-bottom: 5px;
+  margin-right: 8px;
+}
+
+
+.item.h2 { height: 100px; }
+.item.h3 { height: 160px; }
+.item.h4 { height: 220px; }
+.item.h5 { height: 280px; }
+
+.avatarbox_b {
+  width:70px;
+  height:70px;
+  border-radius: 50px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+}
+
+.avatarbox {
+  width:50px;
+  height:50px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+}
+
+.avatarbox2 {
+  width:30px;
+  height:30px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+}
+
+tbody.checktimepage {  
+  background-color: #000000;
+}
+
+.checktime-wrap {
+  width: 100%;
+  margin: 0px auto;
+  border: 0px solid #000000;
+  position: relative;
+}
+.jb-wrap img {
+  width: 100%;
+  vertical-align: middle;
+}
+.checktime-text {
+  padding: 5px 5px;
+  text-align: center;
+  color: #6d2000;
+  font-size : 3vw;
+  font-weight: bold;
+  position: absolute;
+	top: 90%;
+  left: 50%;
+  transform: translate( -50%, -50% );
+}

@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+}
+
+.mason_container {
+  background: white;
+  width: 100%;  
+}
+
+.item {
+  width:  49%;
+  height: 300px;
+  float: left;
+  border: 1px solid;
+  background: white;
+  margin-bottom: 5px;
+}
+
+.item2 {
+  width:  47%;
+  height: 300px;
+  float: left;
+  background: white;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+
+.item.h2 { height: 100px; }
+.item.h3 { height: 160px; }
+.item.h4 { height: 220px; }
+.item.h5 { height: 280px; }
+
+.stamp {
+  background: red;
+  opacity: 0.75;
+  position: absolute;
+  border: 1px solid;
+}
+

@@ -1,0 +1,10 @@
+{
+  "appenders": {
+    "out": { "type": "console" },
+    "file": { "type": "dateFile", "filename": "./logs/app-out.log", "pattern": "yyyy-MM-dd",
+              "alwaysIncludePattern": true, "numBackups": 7, "encoding": "utf-8"}
+  },
+  "categories": {
+    "default": { "appenders": ["out", "file"], "level": "debug" }
+  }
+}
