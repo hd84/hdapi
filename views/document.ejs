@@ -78,10 +78,26 @@
     .tree { color: #94a3b8; font-family: monospace; }
     .nested { margin: 2px 0 2px 12px; }
     .empty { color: #94a3b8; font-size: 0.85rem; }
+    .top-tabs { display: flex; gap: 4px; justify-content: center; margin-top: 8px; }
+    .top-tabs a {
+      padding: 6px 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: #334155;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .top-tabs a:hover { color: #2563eb; border-color: #2563eb; }
+    .top-tabs a.active { background: #2563eb; color: #fff; border-color: #2563eb; }
   </style>
 </head>
 
 <body>
+  <div class="top-tabs">
+    <a href="/restful">API</a>
+    <a href="/document" class="active">Document</a>
+  </div>
   <h1>Game API Document <%= version %></h1>
   <%
     const endpointOf = (cate, api) => cate == 'root' ? `/${api}` : `/${cate}/${api}`;
