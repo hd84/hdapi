@@ -1,42 +1,41 @@
-const router_lib = require('../lib_route');
-const respMgr = require('../../manager/responsemanager');
+const router_lib = require("../lib_route");
+const respMgr = require("../../manager/responsemanager");
 
 class notice extends router_lib {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.getRoute = async function (req, res, param) {
-            await this.postRoute(req, res, param);
-        };
+    this.getRoute = async function (req, res, param) {
+      await this.postRoute(req, res, param);
+    };
 
-        this.postRoute = async function (req, res, param) {
-            const type = param.type;
+    this.postRoute = async function (req, res, param) {
+      const type = param.type;
 
-            if (type !== 'db') {
-                return res.send('ERROR check type and subtype');
-            }
+      if (type !== "db") {
+        return res.send("ERROR check type and subtype");
+      }
 
-            const resp = {
-                RESULT: 0,
-                notice: [],
-            };
-            
-            global.noticedata.forEach(({ idx, noticetext }) => {
-                resp.notice.push({ idx, noticetext });
-            });
+      const resp = {
+        RESULT: 0,
+        notice: [],
+      };
 
-            res.send(JSON.stringify(resp));
-        };
+      global.noticedata.forEach(({ idx, noticetext }) => {
+        resp.notice.push({ idx, noticetext });
+      });
 
-        this.setInit(this.getRoute, this.postRoute, 1, false );
+      res.send(JSON.stringify(resp));
+    };
 
-        this.REQUEST_DATA = {        
-        };
-        this.RESPONSE_DATA = {
-      RESULT:{ type: "number", desc : "result code" },
-            notice: respMgr.notice
-        };
-    }
+    this.setInit(this.getRoute, this.postRoute, 1, false);
+
+    this.REQUEST_DATA = {};
+    this.RESPONSE_DATA = {
+      RESULT: { type: "number", desc: "result code" },
+      notice: respMgr.notice,
+    };
+  }
 }
 
 module.exports = notice;

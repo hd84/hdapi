@@ -95,7 +95,7 @@ class gamelogin extends router_lib {
 
     this.RESPONSE_DATA = {
       RESULT:{ type: "number", desc : "result code" },
-      session: respMgr.session,
+      session_auth: respMgr.session_auth,
       userinfo: respMgr.userinfo,
       game_user: respMgr.game_user
     }

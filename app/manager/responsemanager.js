@@ -1,8 +1,10 @@
-exports.session = {
+exports.session_auth = {
     version:{type:"number", desc : "version number"},
     uuid:{type:"string", desc : "unique user identifier"},        
 }
 
+exports.session = {type:"string", desc : "unique user identifier"};
+    
 exports.userinfo = {
     uid:{type:"number", desc : "user ID"},
     uniqueid:{type:"string", desc : "unique identifier"},
