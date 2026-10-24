@@ -1,3 +1,24 @@
+exports.session = {
+    version:{type:"number", desc : "version number"},
+    uuid:{type:"string", desc : "unique user identifier"},        
+}
+
+exports.userinfo = {
+    uid:{type:"number", desc : "user ID"},
+    uniqueid:{type:"string", desc : "unique identifier"},
+    created_at:{type:"string", desc : "creation timestamp"},
+    updated_at:{type:"string", desc : "update timestamp"}
+}
+exports.user_channel = {
+    idx:{type:"number", desc : "db idx"},
+    ch:{type:"string", desc : "channel value"},
+    cid:{type:"string", desc : "channel identifier"},
+    uniqueid:{type:"string", desc : "unique identifier"},
+    created_at:{type:"string", desc : "creation timestamp"},
+    updated_at:{type:"string", desc : "update timestamp"}
+    
+
+}
 exports.game_user = [{
     uid:{type:"number", desc : "user ID"},
     lv:{type:"number", desc : "user level"},
@@ -31,4 +52,9 @@ exports.user_character = [{
     exp:{type:"number", desc : "card experience"},    
     created_at:{type:"string", desc : "creation timestamp"},
     updated_at:{type:"string", desc : "update timestamp"}
+}];
+
+exports.notice = [{
+    idx:{type:"number", desc : "notice ID"},
+    noticetext:{type:"string", desc : "notice text or dataid"}
 }];

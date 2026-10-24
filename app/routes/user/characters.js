@@ -57,6 +57,7 @@ class characters extends router_lib {
       uid: { type: "number", desc: "user id" }
     }
     this.RESPONSE_DATA = {
+      RESULT:{ type: "number", desc : "result code" },
       game_user: respMgr.game_user,
       user_character: respMgr.user_character
     }

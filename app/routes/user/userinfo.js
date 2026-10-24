@@ -37,6 +37,7 @@ class userinfo extends router_lib {
         };
 
         this.RESPONSE_DATA = {
+      RESULT:{ type: "number", desc : "result code" },
             game_user: respMgr.game_user,
         };
     }

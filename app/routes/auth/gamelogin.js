@@ -6,6 +6,7 @@ const user_channel = require('../../../table/user_channel');
 const user_info = require('../../../table/user_info');
 
 const userMgr = require('../../../app/manager/usermanager');
+const respMgr = require('../../manager/responsemanager');
 
 const DEF = require('../../data/defines');
 const ERR = require('../../data/errors');
@@ -87,6 +88,13 @@ class gamelogin extends router_lib {
 
     this.REQUEST_DATA = {
       uniqueid: { type: "string", desc: "deviceid" }
+    }
+
+    this.RESPONSE_DATA = {
+      RESULT:{ type: "number", desc : "result code" },
+      session: respMgr.session,
+      userinfo: respMgr.userinfo,
+      game_user: respMgr.game_user
     }
   }
 };

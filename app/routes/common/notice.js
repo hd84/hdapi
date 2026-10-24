@@ -1,4 +1,5 @@
 const router_lib = require('../lib_route');
+const respMgr = require('../../manager/responsemanager');
 
 class notice extends router_lib {
     constructor() {
@@ -30,6 +31,10 @@ class notice extends router_lib {
         this.setInit(this.getRoute, this.postRoute, 1, false );
 
         this.REQUEST_DATA = {        
+        };
+        this.RESPONSE_DATA = {
+      RESULT:{ type: "number", desc : "result code" },
+            notice: respMgr.notice
         };
     }
 }

@@ -5,6 +5,8 @@ const ERR = require('../../data/errors');
 
 const user_channel = require('../../../table/user_channel');
 
+const respMgr = require('../../manager/responsemanager');
+
 class finduser extends router_lib {
   constructor() {
     super();
@@ -50,8 +52,12 @@ class finduser extends router_lib {
     this.REQUEST_DATA = {
       ch: { type: "number", desc: "channel 0:GUEST, 1:APPLE, 2:GOOGLE" },
       cid: { type: "string", desc: "cid" },
-      deviceid: { type: "string", desc: "deviceid" }      
-      
+      deviceid: { type: "string", desc: "deviceid" }            
+    }
+
+    this.RESPONSE_DATA = {
+      RESULT:{ type: "number", desc : "result code" },
+      user_channel: respMgr.user_channel
     }
   }
 };

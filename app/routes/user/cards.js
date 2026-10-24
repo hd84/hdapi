@@ -59,6 +59,7 @@ class cards extends router_lib {
     }
 
     this.RESPONSE_DATA = {
+      RESULT:{ type: "number", desc : "result code" },
       game_user: respMgr.game_user,
       user_card: respMgr.user_card
     }

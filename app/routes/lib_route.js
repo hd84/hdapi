@@ -45,7 +45,8 @@ class LibRouter extends express.Router {
     this.post_route_func = undefined;
 
     this.REQUEST_DATA = {}
-    this.RESPONSE_DATA = {}
+    this.RESPONSE_DATA = {
+      RESULT:{ type: "number", desc : "result code" },}
 
     this.setInit = function( child_get, child_post, get_allow, session_check = true){
       this.get_route_func = child_get;
