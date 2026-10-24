@@ -32,6 +32,10 @@ router.get('/restful', async function (req, res) {
 
 });
 
+router.get('/document', function (req, res) {
+  res.render('document', { mapRoute: global.MapRouter, version: global.config.version });
+});
+
 router.get('/login', function (req, res) {
   //var sid = req.cookies.sid;
   var msg = '';

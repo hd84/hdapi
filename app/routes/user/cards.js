@@ -59,7 +59,8 @@ class cards extends router_lib {
     }
 
     this.RESPONSE_DATA = {
-      game_user: respMgr.game_user
+      game_user: respMgr.game_user,
+      user_card: respMgr.user_card
     }
   }
 };

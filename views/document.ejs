@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Document</title>
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans KR', 'Roboto', Arial, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #222;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      min-height: 100vh;
+    }
+    h1 { text-align: center; font-size: 1.6rem; color: #2563eb; margin: 0.5em 0; }
+    .container {
+      display: flex;
+      gap: 32px;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      padding: 32px;
+      margin-top: 24px;
+    }
+    .left {
+      width: 300px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+      border-radius: 16px;
+      padding: 24px 16px;
+      max-height: 800px;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+    .left li { list-style: none; margin-bottom: 2px; border-radius: 8px; }
+    .left li a {
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: 500;
+      padding: 8px 12px;
+      display: block;
+      border-radius: 8px;
+    }
+    .left li a:hover { background: #f3f6fa; }
+    .cate-btn {
+      padding: 4px 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.75rem;
+      color: #334155;
+    }
+    .cate-btn:hover { background: #f1f5f9; color: #2563eb; border-color: #2563eb; }
+    .cate-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .right {
+      flex: 1;
+      min-width: 0;
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+      border-radius: 16px;
+      padding: 24px 16px;
+      min-height: 700px;
+      box-sizing: border-box;
+    }
+    .api { background: #f1f5f9; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .api h2 { margin: 0 0 8px; font-size: 1.1rem; color: #2563eb; }
+    .api h3 { margin: 12px 0 6px; font-size: 0.9rem; color: #334155; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: #fff; }
+    th, td { border: 1px solid #e0e7ef; padding: 4px 8px; text-align: left; }
+    th { background: #f8fafc; color: #334155; }
+    td.type { color: #1c00cf; white-space: nowrap; }
+    td.name { color: #881391; white-space: nowrap; }
+    td.name.group { font-weight: 700; }
+    tr.child td { background: #f8fafc; }
+    .tree { color: #94a3b8; font-family: monospace; }
+    .nested { margin: 2px 0 2px 12px; }
+    .empty { color: #94a3b8; font-size: 0.85rem; }
+  </style>
+</head>
+
+<body>
+  <h1>Game API Document <%= version %></h1>
+  <%
+    const endpointOf = (cate, api) => cate == 'root' ? `/${api}` : `/${cate}/${api}`;
+    const isField = (v) => v && typeof v === 'object' && !Array.isArray(v) && typeof v.type === 'string';
+
+    // 필드 정의({type, desc}) 또는 중첩 객체/배열을 행으로 풀어낸다
+    function rows(obj, depth) {
+      let out = [];
+      Object.keys(obj).forEach(k => {
+        const v = obj[k];
+        if (isField(v)) {
+          out.push({ name: k, depth, type: v.type, desc: v.desc || '' });
+        } else if (Array.isArray(v)) {
+          const item = v[0];
+          out.push({ name: k, depth, type: 'array', desc: '', group: true });
+          if (item && typeof item === 'object') {
+            out = out.concat(rows(item, depth + 1));
+          }
+        } else if (v && typeof v === 'object') {
+          out.push({ name: k, depth, type: 'object', desc: '', group: true });
+          out = out.concat(rows(v, depth + 1));
+        }
+      });
+      return out;
+    }
+
+    function table(data) {
+      if (!data || Object.keys(data).length == 0) {
+        return '<div class="empty">없음</div>';
+      }
+      let html = '<table><tr><th>Name</th><th>Type</th><th>Description</th></tr>';
+      rows(data, 0).forEach(r => {
+        const indent = r.depth > 0 ? `<span class="tree" style="margin-left:${(r.depth - 1) * 20}px">└ </span>` : '';
+        const cls = r.group ? 'name group' : 'name';
+        const bg = r.depth > 0 ? ' class="child"' : '';
+        html += `<tr${bg}><td class="${cls}">${indent}${esc(r.name)}</td><td class="type">${esc(r.type)}</td><td>${esc(r.desc)}</td></tr>`;
+      });
+      return html + '</table>';
+    }
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+  %>
+  <div class="container">
+    <div class="left">
+      <div style="margin-bottom: 10px; display: flex; gap: 4px; flex-wrap: wrap;">
+        <button type="button" class="cate-btn active" onclick="filterCate('all', this)">All</button>
+        <% Object.keys(mapRoute).forEach(cate => { %>
+          <button type="button" class="cate-btn" onclick="filterCate('<%= cate %>', this)"><%= cate %></button>
+        <% }); %>
+      </div>
+      <% Object.keys(mapRoute).forEach(cate => { %>
+        <% Object.keys(mapRoute[cate]).forEach(api => { %>
+          <li class="endpoint-item" data-cate="<%= cate %>"><a href="#<%= cate %>-<%= api %>"><%= endpointOf(cate, api) %></a></li>
+        <% }); %>
+      <% }); %>
+    </div>
+    <div class="right">
+      <% Object.keys(mapRoute).forEach(cate => { %>
+        <% Object.keys(mapRoute[cate]).forEach(api => { %>
+          <div class="api" id="<%= cate %>-<%= api %>" data-cate="<%= cate %>">
+            <h2><%= endpointOf(cate, api) %></h2>
+            <h3>Request Data</h3>
+            <%- table(mapRoute[cate][api].REQUEST_DATA) %>
+            <h3>Response Data</h3>
+            <%- table(mapRoute[cate][api].RESPONSE_DATA) %>
+          </div>
+        <% }); %>
+      <% }); %>
+    </div>
+  </div>
+  <script>
+    function filterCate(cate, btn) {
+      document.querySelectorAll('.cate-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('[data-cate]').forEach(el => {
+        el.style.display = (cate === 'all' || el.dataset.cate === cate) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+
+</html>

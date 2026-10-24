@@ -5,7 +5,7 @@ const user_info = require('../../../table/user_info');
 const user_character = require('../../../table/user_character');
 
 const userMgr = require('../../manager/usermanager');
-
+const respMgr = require('../../manager/responsemanager');
 
 class characters extends router_lib {
   constructor() {
@@ -55,6 +55,10 @@ class characters extends router_lib {
     this.REQUEST_DATA = {
       session: { type: "string", desc: "user session" },
       uid: { type: "number", desc: "user id" }
+    }
+    this.RESPONSE_DATA = {
+      game_user: respMgr.game_user,
+      user_character: respMgr.user_character
     }
   }
 };
