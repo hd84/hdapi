@@ -5,6 +5,7 @@ const user_info = require('../../../table/user_info');
 const user_card = require('../../../table/user_card');
 
 const userMgr = require('../../manager/usermanager');
+const respMgr = require('../../manager/responsemanager');
 
 
 class cards extends router_lib {
@@ -55,6 +56,10 @@ class cards extends router_lib {
     this.REQUEST_DATA = {
       session: { type: "string", desc: "user session" },
       uid: { type: "number", desc: "user id" }
+    }
+
+    this.RESPONSE_DATA = {
+      game_user: respMgr.game_user
     }
   }
 };

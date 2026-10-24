@@ -26,7 +26,10 @@ class notice extends router_lib {
             Object.keys(global.MapRouter).forEach(main_cate => {
                 Object.keys(global.MapRouter[main_cate]).forEach(api_name => {                   
                     let apiname = `${main_cate}/${api_name}`;
-                    resp.result[apiname] = global.MapRouter[main_cate][api_name].REQUEST_DATA;
+                    resp.result[apiname] = {
+                        REQUEST_DATA: global.MapRouter[main_cate][api_name].REQUEST_DATA,
+                        RESPONSE_DATA: global.MapRouter[main_cate][api_name].RESPONSE_DATA,
+                    };
                 });
             });
 

@@ -1,6 +1,7 @@
 const router_lib = require('../lib_route');
 
 const user_info = require('../../../table/user_info');
+const respMgr = require('../../manager/responsemanager');
 
 class userinfo extends router_lib {
     constructor() {
@@ -33,6 +34,10 @@ class userinfo extends router_lib {
 
         this.REQUEST_DATA = {      
             uid: { type: "number", desc: "uid" }            
+        };
+
+        this.RESPONSE_DATA = {
+            game_user: [respMgr.game_user]
         };
     }
 }
