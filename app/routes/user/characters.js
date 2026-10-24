@@ -22,28 +22,27 @@ class characters extends router_lib {
       global.logger.info("type1=%s, uid=%s", type1, uid);
 
       // db에 있는 데이터 읽어서 보낼때
-      if (type1 == 'db') {        
-        var resp = res.resp;  // response 되는 패킷의 내용을 정의        
-        if( resp == undefined ){
-          resp = {};
+      if (type1 == 'db') {                
+        if( res.resp == undefined ){
+          res.resp = {};
         }
-        resp["game_user"] = [];
+        res.resp["game_user"] = [];
         let ret_gameuser = await userMgr.getUserInfo(uid);
         if( ret_gameuser != undefined  ){
-          resp.RESULT = 0;          
-          resp["game_user"].push(ret_gameuser.toObject());
+          res.resp.RESULT = 0;          
+          res.resp["game_user"].push(ret_gameuser.toObject());
 
           let ret_usercharacter = await user_character.getCharacters(uid);
-          resp["user_character"] = [];
+          res.resp["user_character"] = [];
           if( ret_usercharacter != undefined ){
             ret_usercharacter.forEach(character => {
-              resp["user_character"].push(character.toObject());
+              res.resp["user_character"].push(character.toObject());
             });
           }
         } else {
-          resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
+          res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
         }
-        res.send(JSON.stringify(resp));
+        res.send(JSON.stringify(res.resp));
       } else {
         res.send('ERROR check type and subtype');
       }

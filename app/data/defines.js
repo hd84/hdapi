@@ -22,9 +22,20 @@ const SESSION_USE = Object.freeze({
   DEFAULT: 1,
   AUTO_REFRESH: 2,
 });
+
+const REWARD_TYPE = Object.freeze({
+  GEM_PURCHASE: 1,
+  GEM_FREE: 2,
+  GOLD: 3,
+  HEART: 4,
+  CARD: 5
+});
+
+
 module.exports = {
   USER_TYPE,
   ERROR_CODE,
   CHANNEL_TYPE,
   SESSION_USE,
+  REWARD_TYPE,
 };

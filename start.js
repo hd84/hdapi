@@ -219,6 +219,8 @@ function config_args_parse() {
 // WEB 서버 실행
 async function _server_init() {
   await _setDefinedata();
+
+  loadJsonData();
 }
 
 // 메인 구문
@@ -333,6 +335,23 @@ function GetServerMode() {
   return global.launch_config_args["mode"];
 }
 
+function loadJsonData() {
+  const jsonDir = path.join(__dirname, 'json');
+  global.GameData = {};
+
+  fs.readdirSync(jsonDir)
+    .filter(file => path.extname(file).toLowerCase() === '.json')
+    .forEach(file => {
+      const name = path.basename(file, '.json');
+      try {
+        global.GameData[name] = JSON.parse(fs.readFileSync(path.join(jsonDir, file), 'utf8'));
+      } catch (err) {
+        global.logger.error("JSON load failed: %s, %s", file, err.message);
+      }
+    });
+
+  global.logger.info("GameData loaded: %s", Object.keys(global.GameData).join(', '));
+}
 // 초기화
 _sysInit();
 

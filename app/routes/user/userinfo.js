@@ -18,16 +18,16 @@ class userinfo extends router_lib {
                 return res.send('ERROR check type and subtype');
             }
 
-            const resp = {
-                RESULT: 0,
-                game_user: [],
-            };
-            
+            if( res.resp == undefined ){
+                res.resp = {};
+            }
+            res.resp.RESULT = 0;
+            res.resp["game_user"] = [];
             let user = await user_info.getUserByUid(param.uid);            
-            resp.game_user.push(user.toObject());
+            res.resp.game_user.push(user.toObject());
 
 
-            res.send(JSON.stringify(resp));
+            res.send(JSON.stringify(res.resp));
         };
 
         this.setInit(this.getRoute, this.postRoute, 1,false);

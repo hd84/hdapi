@@ -23,28 +23,27 @@ class cards extends router_lib {
       global.logger.info("type1=%s, uid=%s", type1, uid);
 
       // db에 있는 데이터 읽어서 보낼때
-      if (type1 == 'db') {        
-        var resp = res.resp;  // response 되는 패킷의 내용을 정의        
-        if( resp == undefined ){
-          resp = {};
+      if (type1 == 'db') {                
+        if( res.resp == undefined ){
+          res.resp = {};
         }
-        resp["game_user"] = [];
+        res.resp["game_user"] = [];
         let ret_gameuser = await userMgr.getUserInfo(uid);
         if( ret_gameuser != undefined  ){
-          resp.RESULT = 0;          
-          resp["game_user"].push(ret_gameuser.toObject());
+          res.resp.RESULT = 0;          
+          res.resp["game_user"].push(ret_gameuser.toObject());
 
           let ret_usercard = await user_card.getCards(uid);
-          resp["user_card"] = [];
+          res.resp["user_card"] = [];
           if( ret_usercard != undefined ){
             ret_usercard.forEach(card => {
-              resp["user_card"].push(card.toObject());
+              res.resp["user_card"].push(card.toObject());
             });
           }
         } else {
-          resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
+          res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
         }
-        res.send(JSON.stringify(resp));
+        res.send(JSON.stringify(res.resp));
       } else {
         res.send('ERROR check type and subtype');
       }

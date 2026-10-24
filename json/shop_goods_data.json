@@ -1,0 +1,52 @@
+[
+  {
+    "idx": "100001",
+    "name": "goods1",
+    "type": "1",
+    "reward_type": "3",
+    "reward_value": "0",
+    "reward_count": "10",
+    "reward_id": "1",
+    "count": "1"
+  },
+  {
+    "idx": "100002",
+    "name": "goods2",
+    "type": "1",
+    "reward_type": "3",
+    "reward_value": "0",
+    "reward_count": "20",
+    "reward_id": "2",
+    "count": "11"
+  },
+  {
+    "idx": "100003",
+    "name": "goods3",
+    "type": "1",
+    "reward_type": "3",
+    "reward_value": "0",
+    "reward_count": "10",
+    "reward_id": "3",
+    "count": "1"
+  },
+  {
+    "idx": "100004",
+    "name": "goods4",
+    "type": "1",
+    "reward_type": "3",
+    "reward_value": "0",
+    "reward_count": "10",
+    "reward_id": "4",
+    "count": "1"
+  },
+  {
+    "idx": "100005",
+    "name": "goods5",
+    "type": "1",
+    "reward_type": "3",
+    "reward_value": "0",
+    "reward_count": "10",
+    "reward_id": "5",
+    "count": "1"
+  }
+]

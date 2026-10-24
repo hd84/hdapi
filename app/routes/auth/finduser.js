@@ -25,22 +25,24 @@ class finduser extends router_lib {
 
       // db에 있는 데이터 읽어서 보낼때
       if (type1 == 'db') {        
-        var resp = {};  // response 되는 패킷의 내용을 정의
-
+        if( res.resp == undefined ){
+          res.resp = {};
+        }
+        
         let ret = await user_channel.getUserByChannel(ch, cid);
         if( ret == undefined || ret.length == 0 ){          
           ret = await user_channel.newUserChannel(DEF.CHANNEL_TYPE.GUEST, cid, deviceid);         
         }
 
         if( ret != undefined && ret != null ){
-          resp.RESULT = 0;
-          resp["user_channel"] = [];
-          resp["user_channel"].push(ret.toObject());
+          res.resp.RESULT = 0;
+          res.resp["user_channel"] = [];
+          res.resp["user_channel"].push(ret.toObject());
         } else {
-          resp.RESULT = -1;
+          res.resp.RESULT = -1;
         }
         
-        res.send(JSON.stringify(resp));
+        res.send(JSON.stringify(res.resp));
       }
       else {
         res.send('ERROR check type and subtype');

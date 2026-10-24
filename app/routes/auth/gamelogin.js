@@ -26,29 +26,32 @@ class gamelogin extends router_lib {
       global.logger.info("type1=%s, uniqueid=%s", type1, uniqueid);
 
       // db에 있는 데이터 읽어서 보낼때
-      if (type1 == 'db') {        
-        var resp = {};  // response 되는 패킷의 내용을 정의
+      if (type1 == 'db') {                
+        if( res.resp == undefined ){
+          res.resp = {};
+        }
+
         let channelInfo = await user_channel.getUserByUniqueId(uniqueid);
         if( channelInfo != null && channelInfo.cid != null ){
           let userObj = await common_users.getUserByUniqueId(uniqueid);
           if( userObj != null && userObj.uid != null ){
             let session = await userMgr.setUserLoginSession(userObj.uid);
             if( session != undefined ) {
-              resp["session"] = JSON.parse(session);
+              res.resp["session"] = JSON.parse(session);
 
-              resp.RESULT = 0;
-              resp["userinfo"] = [];
-              resp["userinfo"].push(userObj.toObject());                    
+              res.resp.RESULT = 0;
+              res.resp["userinfo"] = [];
+              res.resp["userinfo"].push(userObj.toObject());                    
 
-              resp["game_user"] = [];
+              res.resp["game_user"] = [];
               let ret_gameuser = await user_info.getUserByUid(userObj.uid);
               if( ret_gameuser != undefined  ){
                 await ret_gameuser.refreshHeart();
                 await ret_gameuser.updateData();            
-                resp["game_user"].push(ret_gameuser.toObject());                                
+                res.resp["game_user"].push(ret_gameuser.toObject());                                
               }
             } else {
-              resp.RESULT = ERR.ERROR_CODE.FAILED_CREATE_SESSION;
+              res.resp.RESULT = ERR.ERROR_CODE.FAILED_CREATE_SESSION;
             }          
           } else {
             let ret = await common_users.tempUser(uniqueid);
@@ -56,29 +59,29 @@ class gamelogin extends router_lib {
               let newuser = await common_users.newUser(ret);
               let session = await userMgr.setUserLoginSession(newuser.uid);
               if( session != undefined ) {
-                resp["session"] = JSON.parse(session);
-                resp.RESULT = 0;              
+                res.resp["session"] = JSON.parse(session);
+                res.resp.RESULT = 0;              
                 let ret_gameuser = await user_info.newData(newuser.uid);
-                resp["userinfo"] = [];
-                resp["userinfo"].push(newuser.toObject());
-                resp["game_user"] = [];
-                resp["game_user"].push(ret_gameuser.toObject());
+                res.resp["userinfo"] = [];
+                res.resp["userinfo"].push(newuser.toObject());
+                res.resp["game_user"] = [];
+                res.resp["game_user"].push(ret_gameuser.toObject());
 
                 userMgr.createUserProcess(newuser.uid);
                 global.logger.info("session=%s", session);
               } else {
-                resp.RESULT = ERR.ERROR_CODE.FAILED_CREATE_SESSION;
+                res.resp.RESULT = ERR.ERROR_CODE.FAILED_CREATE_SESSION;
               }
               
             } else {
-              resp.RESULT = -1;
+              res.resp.RESULT = -1;
             }
           } 
         } else {
-          resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
+          res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
         }            
         
-        res.send(JSON.stringify(resp));
+        res.send(JSON.stringify(res.resp));
       } else {
         res.send('ERROR check type and subtype');
       }
