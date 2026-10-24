@@ -22,16 +22,10 @@ class characters extends router_lib {
       global.logger.info("type1=%s, uid=%s", type1, uid);
 
       // db에 있는 데이터 읽어서 보낼때
-      if (type1 == 'db') {                
-        if( res.resp == undefined ){
-          res.resp = {};
-        }
-        res.resp["game_user"] = [];
-        let ret_gameuser = await userMgr.getUserInfo(uid);
-        if( ret_gameuser != undefined  ){
+      if (type1 == 'db') {                        
+        if( res.cached.userdata != undefined  ){
           res.resp.RESULT = 0;          
-          res.resp["game_user"].push(ret_gameuser.toObject());
-
+          
           let ret_usercharacter = await user_character.getCharacters(uid);
           res.resp["user_character"] = [];
           if( ret_usercharacter != undefined ){

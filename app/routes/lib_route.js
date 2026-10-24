@@ -107,9 +107,12 @@ class LibRouter extends express.Router {
       if( res.cached.uid != undefined ){
         let ret_gameuser = await userMgr.getUserInfo(res.cached.uid);
         if( ret_gameuser == null ){
-          res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
+          res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;          
         } else {
           res.cached.userdata = ret_gameuser;
+
+          res.resp["game_user"] = [];
+          res.resp["game_user"].push(res.cached.userdata.toObject());
         }        
       }                  
     }

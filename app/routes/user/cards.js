@@ -27,12 +27,8 @@ class cards extends router_lib {
         if( res.resp == undefined ){
           res.resp = {};
         }
-        res.resp["game_user"] = [];
-        let ret_gameuser = await userMgr.getUserInfo(uid);
-        if( ret_gameuser != undefined  ){
-          res.resp.RESULT = 0;          
-          res.resp["game_user"].push(ret_gameuser.toObject());
-
+        if( res.cached.userdata != undefined  ){
+          res.resp.RESULT = 0;                    
           let ret_usercard = await user_card.getCards(uid);
           res.resp["user_card"] = [];
           if( ret_usercard != undefined ){
