@@ -57,6 +57,12 @@ class LibRouter extends express.Router {
       // }
     }
 
+    this.preRoute = async function(req, res){
+      this.ip_check(req);
+      await this.session_check(req, res);
+      await this.getRequestUserData(req, res);
+    }
+
     this.ip_check = function(req){
       var ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0].trim();      
       var ip_address = null;
@@ -112,9 +118,7 @@ class LibRouter extends express.Router {
       if( this.get_route_func != undefined ){
         if( this.router_setting.GET_ALLOW == 1 ){
           // IP 및 세션 확인
-          this.ip_check(req);                
-          await this.session_check(req, res);
-          await this.getRequestUserData(req, res);
+          await this.preRoute(req, res);
           
           // 문제 없으면 각 라우트 함수 실행
           if( res.resp.RESULT  == ERR.ERROR_CODE.SUCCESS ){
@@ -134,9 +138,7 @@ class LibRouter extends express.Router {
       //do something
       if( this.post_route_func != undefined ){
         // IP 및 세션 확인
-        this.ip_check(req);                
-        await this.session_check(req, res);
-        await this.getRequestUserData(req, res);
+        await this.preRoute(req, res);
 
         // 문제 없으면 각 라우트 함수 실행
         if( res.resp.RESULT  == ERR.ERROR_CODE.SUCCESS ){
