@@ -6,6 +6,10 @@ const user_card = require('../../table/user_card');
 exports.reward = async function( res, type, value, count ) {
   console.log(`Rewarding: type=${type}, value=${value}, count=${count}`);
 
+  const num_type = parseInt(type);
+  const num_value = parseInt(value);
+  const num_count = parseInt(count);
+
   let userdata = res.cached.userdata;
 
   if ( !userdata ) {
@@ -20,10 +24,30 @@ exports.reward = async function( res, type, value, count ) {
   if( res.cached.reward_count == undefined ){
     res.cached.reward_count = {};
   }
-  res.cached.reward.push({type, value, count});
-  res.cached.reward_count[type] = (res.cached.reward_count[type] || 0) + 1;  
+  res.cached.reward.push({type: num_type, value: num_value, count: num_count});
+  res.cached.reward_count[num_type] = (res.cached.reward_count[num_type] || 0) + 1;  
 }
 
+exports.resourceCheck = async function( res, type, value, count ) {
+  // Implement resource check logic if needed
+  let userdata = res.cached.userdata;
+  if ( !userdata ) {
+    res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
+    return false;
+  }
+
+  switch ( parseInt(type) ) {
+    case DEF.REWARD_TYPE.GOLD:
+      return (userdata.gold || 0) >= count;
+    case DEF.REWARD_TYPE.GEM_PAID:
+      return (userdata.gem_paid || 0) >= count;
+    case DEF.REWARD_TYPE.GEM_FREE:
+      return (userdata.gem_free || 0) >= count;
+    default:
+      return false;
+  }
+  
+}
 exports.rewardComplete = async function( res ) {
   let user_card_object = {};
   let user_card_list = [];
@@ -69,6 +93,7 @@ exports.rewardComplete = async function( res ) {
     }
   }
 
+  await res.cached.userdata.updateData();
   if( insert_card_list.length > 0 ){
     await user_card.insertList(insert_card_list);
   }

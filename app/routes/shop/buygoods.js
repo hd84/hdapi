@@ -29,8 +29,17 @@ class buygoods extends router_lib {
         if( res.cached.userdata != undefined  ){
           res.resp.RESULT = 0;                    
           
-          const goods_data = global.GameData["shop_goods_data"][goods_id];
-          if( goods_data.type == DEF.SHOP_GOODS_TYPE.GACHA){
+          const goods_data = global.GameData["shop_goods_data"].find(g => g.idx == goods_id);
+
+          let resourceCheckResult = await rewardMgr.resourceCheck(res, goods_data.reward_type, goods_data.reward_value, goods_data.reward_count);
+          if( resourceCheckResult == false ){
+            res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_RESOURCE;
+            res.send(JSON.stringify(res.resp));
+            return;
+          }
+
+          rewardMgr.reward( res, goods_data.reward_type, goods_data.reward_value, -goods_data.reward_count );
+          if( goods_data.type == DEF.SHOP_GOODS_TYPE.GACHA){            
             let gacha_list = [];
             let max_rand = 0;
             global.GameData["gacha_data"].forEach(gachadata => {

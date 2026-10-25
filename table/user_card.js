@@ -94,11 +94,7 @@ exports.insertList = async function(list) {
 
 exports.updateList = async function(list) {
   list.forEach(async (item) => {
-    const table = new TB_USER_CARD();
-    table.shardKey = item.uid;
-    const query = table.query().update(item).where({ idx: item.idx });
-    global.logger.debug(`[UpdateList] SQL:`, query.toString());
-    await query;
+    await item.updateData();
   });
 }
 
