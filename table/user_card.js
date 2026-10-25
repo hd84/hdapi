@@ -41,7 +41,7 @@ exports.getCards = async function (uid) {
   }
 }
 
-exports.tempUserCard = async function(uid, did) {
+exports.tempUserCard = async function(uid, did, count = 0) {
   const table = new TB_USER_CARD();
   try {    
     let data;
@@ -50,7 +50,7 @@ exports.tempUserCard = async function(uid, did) {
     data.did = did;
     data.lv = 1;
     data.exp = 0;
-    data.count = 0;
+    data.count = count;
     data.created_at = datetime.now();
     data.updated_at = datetime.now();    
     let ret = new TB_USER_CARD(data);
@@ -88,8 +88,18 @@ exports.newUserCard = async function(uid, did) {
   }
 }
 
-exports.insertList = function(list) {
+exports.insertList = async function(list) {
   return TB_USER_CARD.insertList(list);
+}
+
+exports.updateList = async function(list) {
+  list.forEach(async (item) => {
+    const table = new TB_USER_CARD();
+    table.shardKey = item.uid;
+    const query = table.query().update(item).where({ idx: item.idx });
+    global.logger.debug(`[UpdateList] SQL:`, query.toString());
+    await query;
+  });
 }
 
 exports.TB_USER_CARD = TB_USER_CARD;

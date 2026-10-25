@@ -37,7 +37,7 @@ class gamelogin extends router_lib {
           if( userObj != null && userObj.uid != null ){
             let session = await userMgr.setUserLoginSession(userObj.uid);
             if( session != undefined ) {
-              res.resp["session"] = JSON.parse(session);
+              res.resp["session"] = JSON.parse(session).uuid;
 
               res.resp.RESULT = 0;
               res.resp["userinfo"] = [];
@@ -95,7 +95,7 @@ class gamelogin extends router_lib {
 
     this.RESPONSE_DATA = {
       RESULT:{ type: "number", desc : "result code" },
-      session_auth: respMgr.session_auth,
+      session: respMgr.session,
       userinfo: respMgr.userinfo,
       game_user: respMgr.game_user
     }

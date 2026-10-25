@@ -280,6 +280,8 @@ function setRoute() {
   addRouter('user/cards');
   addRouter('user/characters');
 
+  addRouter('shop/buygoods');
+
   addRouter('common/notice');
   addRouter('common/packetjson');
 

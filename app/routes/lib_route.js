@@ -57,7 +57,15 @@ class LibRouter extends express.Router {
       // }
     }
 
+    // 응답 전송이 끝난 뒤 모든 API에서 공통 실행 (성공/실패/세션오류 포함)
+    this.afterRoute = async function(req, res){
+      // TODO: 공통 종료 처리 (로그, 통계, 캐시 정리 등)
+    }
+
     this.preRoute = async function(req, res){
+      res.once('finish', () => {
+        this.afterRoute(req, res).catch(err => global.logger.error("afterRoute error: %s", err));
+      });
       this.ip_check(req);
       await this.session_check(req, res);
       await this.getRequestUserData(req, res);
