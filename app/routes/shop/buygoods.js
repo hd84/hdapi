@@ -38,7 +38,7 @@ class buygoods extends router_lib {
             return;
           }
 
-          rewardMgr.reward( res, goods_data.reward_type, goods_data.reward_value, -goods_data.reward_count );
+          await rewardMgr.reward( res, goods_data.reward_type, goods_data.reward_value, -goods_data.reward_count );
           if( goods_data.type == DEF.SHOP_GOODS_TYPE.GACHA){            
             let gacha_list = [];
             let max_rand = 0;
@@ -63,10 +63,10 @@ class buygoods extends router_lib {
 
               if( selected_gacha != undefined){
                 // process the selected gacha if needed
-                rewardMgr.reward( res, selected_gacha.reward_type, selected_gacha.reward_value, selected_gacha.reward_count );
+                await rewardMgr.reward( res, selected_gacha.reward_type, selected_gacha.reward_value, selected_gacha.reward_count );
               }
 
-              rewardMgr.rewardComplete(res);
+              await rewardMgr.rewardComplete(res);
             }
           }
         } else {

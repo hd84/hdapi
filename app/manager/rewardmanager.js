@@ -69,7 +69,7 @@ exports.rewardComplete = async function( res ) {
 
   for(const reward of res.cached.reward){
     const {type, value, count} = reward;
-    switch ( parseInt(type) ) {
+    switch ( type ) {
       case DEF.REWARD_TYPE.GOLD:
         res.cached.userdata.gold = (res.cached.userdata.gold || 0) + count;
         break;
@@ -92,6 +92,8 @@ exports.rewardComplete = async function( res ) {
         return;
     }
   }
+
+  res.resp.reward_list = res.cached.reward;
 
   await res.cached.userdata.updateData();
   if( insert_card_list.length > 0 ){
