@@ -60,3 +60,9 @@ exports.notice = [{
     idx:{type:"number", desc : "notice ID"},
     noticetext:{type:"string", desc : "notice text or dataid"}
 }];
+
+exports.reward_list = [{
+    type:{type:"number", desc : "reward type"},
+    value:{type:"number", desc : "reward value"},
+    count:{type:"number", desc : "reward count"}
+}];

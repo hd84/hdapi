@@ -96,11 +96,13 @@ exports.rewardComplete = async function( res ) {
   res.resp.reward_list = res.cached.reward;
 
   await res.cached.userdata.updateData();
+  res.resp.game_user = res.cached.userdata.toObject();
   if( insert_card_list.length > 0 ){
     await user_card.insertList(insert_card_list);
   }
   if( update_card_list.length > 0 ){
     await user_card.updateList(update_card_list);
   }
+  
   // switch block removed, handled in forEach above
 }

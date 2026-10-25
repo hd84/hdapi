@@ -31,14 +31,14 @@ class buygoods extends router_lib {
           
           const goods_data = global.GameData["shop_goods_data"].find(g => g.idx == goods_id);
 
-          let resourceCheckResult = await rewardMgr.resourceCheck(res, goods_data.reward_type, goods_data.reward_value, goods_data.reward_count);
+          let resourceCheckResult = await rewardMgr.resourceCheck(res, goods_data.use_type, goods_data.use_value, goods_data.use_count);
           if( resourceCheckResult == false ){
             res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_RESOURCE;
             res.send(JSON.stringify(res.resp));
             return;
           }
 
-          await rewardMgr.reward( res, goods_data.reward_type, goods_data.reward_value, -goods_data.reward_count );
+          await rewardMgr.reward( res, goods_data.use_type, goods_data.use_value, -goods_data.use_count );
           if( goods_data.type == DEF.SHOP_GOODS_TYPE.GACHA){            
             let gacha_list = [];
             let max_rand = 0;
@@ -89,8 +89,8 @@ class buygoods extends router_lib {
 
     this.RESPONSE_DATA = {
       RESULT:{ type: "number", desc : "result code" },
-      game_user: respMgr.game_user,
-      user_card: respMgr.user_card
+      game_user: respMgr.game_user,      
+      reward_list: respMgr.reward_list,
     }
   }
 };
