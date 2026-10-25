@@ -1,6 +1,7 @@
 const router_lib = require('../lib_route');
 const ERR = require('../../data/errors');
 const DEF = require('../../data/defines');
+const commonfunc = require('../common/commonfunc');
 
 const common_users = require('../../../table/common_users');
 const user_card = require('../../../table/user_card');
@@ -39,35 +40,10 @@ class buygoods extends router_lib {
           }
 
           await rewardMgr.reward( res, goods_data.use_type, goods_data.use_value, -goods_data.use_count );
+
           if( goods_data.type == DEF.SHOP_GOODS_TYPE.GACHA){            
-            let gacha_list = [];
-            let max_rand = 0;
-            global.GameData["gacha_data"].forEach(gachadata => {
-              // process gacha data if needed
-              if(gachadata.groupid == goods_data.reward_id) {
-                gacha_list.push(gachadata);
-                max_rand = gachadata.maxprob;
-              }
-            })  ;
-
-            if( gacha_list.length > 0 ){
-              let randval = Math.floor(Math.random() * max_rand) + 1;
-              let selected_gacha = null;
-              gacha_list.forEach(gacha => {
-                if(randval <= gacha.prob) {
-                  selected_gacha = gacha;                  
-                } else {
-                  randval -= gacha.prob;
-                }                
-              });
-
-              if( selected_gacha != undefined){
-                // process the selected gacha if needed
-                await rewardMgr.reward( res, selected_gacha.reward_type, selected_gacha.reward_value, selected_gacha.reward_count );
-              }
-
-              await rewardMgr.rewardComplete(res);
-            }
+            await rewardMgr.gacha(res, goods_data.reward_id);
+            await rewardMgr.rewardComplete(res);        
           }
         } else {
           res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;

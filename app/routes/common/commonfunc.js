@@ -40,3 +40,9 @@ exports.getRedisGame = function ( shardkey ) {
   
   return global.REDIS["GAME"][shardkey % global.REDIS["GAME"].length];
 }
+
+exports.getRandomInt = function (min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

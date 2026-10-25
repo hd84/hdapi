@@ -3,6 +3,9 @@ const DEF = require('../data/defines');
 
 const user_card = require('../../table/user_card');
 
+const commonfunc = require('../routes/common/commonfunc');
+
+
 exports.reward = async function( res, type, value, count ) {
   console.log(`Rewarding: type=${type}, value=${value}, count=${count}`);
 
@@ -105,4 +108,34 @@ exports.rewardComplete = async function( res ) {
   }
   
   // switch block removed, handled in forEach above
+}
+
+exports.gacha = async function( res, gacha_id ) {
+  let gacha_list = [];
+  let max_rand = 0;
+  global.GameData["gacha_data"].forEach(gachadata => {
+    // process gacha data if needed
+    if(gachadata.groupid == gacha_id) {
+      gacha_list.push(gachadata);
+      max_rand = gachadata.maxprob;
+    }
+  })  ;
+
+  if( gacha_list.length > 0 ){
+    let randval = commonfunc.getRandomInt(1, max_rand);
+    let selected_gacha = null;
+    for(const gacha of gacha_list) {
+      if(randval <= gacha.prob) {
+        selected_gacha = gacha;
+        break;
+      } else {
+        randval -= gacha.prob;
+      }                
+    }
+
+    if( selected_gacha != undefined){
+      // process the selected gacha if needed
+      await this.reward( res, selected_gacha.reward_type, selected_gacha.reward_value, selected_gacha.reward_count );
+    }    
+  }
 }
