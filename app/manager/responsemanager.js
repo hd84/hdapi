@@ -8,6 +8,8 @@ exports.session = {type:"string", desc : "unique user identifier"};
 exports.userinfo = {
     uid:{type:"number", desc : "user ID"},
     uniqueid:{type:"string", desc : "unique identifier"},
+    country_regist:{type:"string", desc : "registration country"},
+    country_last:{type:"string", desc : "last country"},
     created_at:{type:"string", desc : "creation timestamp"},
     updated_at:{type:"string", desc : "update timestamp"}
 }
