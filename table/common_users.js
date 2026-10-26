@@ -13,10 +13,17 @@ class TB_COMMON_USERS extends DB_TABLE {
   constructor(row) {
     super(TABLE_INFO);
     this.uid = null;    
-    this.uniqueid = null;    
+    this.uniqueid = null;
+    this.country_regist = null;
+    this.country_last = null;
     this.created_at = null;
     this.updated_at = null;
     if (row) this.setData(row);
+  }
+
+  updateCountry = function(country) {
+    this.country_regist = country;
+    this.country_last = country;    
   }
 };
 
@@ -50,17 +57,20 @@ exports.getUserByUid = async function (uid) {
     const table = new TB_COMMON_USERS();
     global.logger.debug(`[GetUserByUid] SQL:`, table.query().select('*').where({ uid }).toString());    
     const rows = await table.query().select('*').where({ uid: uid });
-    return rows.map(row => new TB_COMMON_USERS(row));
+    if( rows.length === 0 ) return null;
+    return new TB_COMMON_USERS(rows[0]);
   } catch (err) {
     global.logger.error(err);
   }
 }
 
-exports.tempUser = async function(uniqueid) {
+exports.tempUser = async function(uniqueid, country = 'ZZ') {
   const table = new TB_COMMON_USERS();
   try {
     let data = {};    
     data.uniqueid = uniqueid || "";
+    data.country_regist = country;
+    data.county_last = country;
     data.created_at = datetime.now();
     data.updated_at = datetime.now();    
     return data;

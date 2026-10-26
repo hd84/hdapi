@@ -87,8 +87,14 @@ class LibRouter extends express.Router {
 
       let geo = geoip.lookup(ip_address);
       if( geo == undefined ){
-        geo = { country: "unknown", city: "unknown" };
+        geo = { country: "ZZ", city: "ZZ" };
       }
+
+      if( ip == '127.0.0.1' || ip == '::1' ){
+        geo = { country: "KR", city: "KR" };
+      }
+
+      
         
         
       req.geo = geo;

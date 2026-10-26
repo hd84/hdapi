@@ -23,10 +23,12 @@ class uidfind extends router_lib {
             };
             
             let user = await tb_common_users.getUserByUid(param.uid);
-            //await tb_common_users.updateUserOne(user[0].toObject());
-            user[0].updated_at = new Date();
-            let ret = await  user[0].updateData();
-            resp.user.push(...user.map(u => u.toObject()));
+            
+            if ( user != undefined ) {
+                user.updateCountry(req.geo ? req.geo.country : "ZZ");
+                let ret = await user.updateData();
+                resp.user.push(user.toObject());
+            }
 
 
             res.send(JSON.stringify(resp));

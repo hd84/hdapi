@@ -24,7 +24,7 @@ class gamelogin extends router_lib {
       var uniqueid = param['uniqueid'];
 
       global.logger.info("type1=%s, uniqueid=%s", type1, uniqueid);
-      global.logger.info("req ip country : ", req.geo ? req.geo.country : "unknown");
+      global.logger.info("req ip country : ", req.geo ? req.geo.country : "ZZ");
 
       // db에 있는 데이터 읽어서 보낼때
       if (type1 == 'db') {                
@@ -36,6 +36,8 @@ class gamelogin extends router_lib {
         if( channelInfo != null && channelInfo.cid != null ){
           let userObj = await common_users.getUserByUniqueId(uniqueid);
           if( userObj != null && userObj.uid != null ){
+            userObj.updateCountry(req.geo ? req.geo.country : "ZZ");
+            await userObj.updateData();
             let session = await userMgr.setUserLoginSession(userObj.uid);
             if( session != undefined ) {
               res.resp["session"] = JSON.parse(session).uuid;
@@ -46,21 +48,19 @@ class gamelogin extends router_lib {
 
               res.resp["game_user"] = [];
               let ret_gameuser = await user_info.getUserByUid(userObj.uid);
-              if( ret_gameuser != undefined  ){
-                ret_gameuser.refreshHeart();
-                await ret_gameuser.updateData();            
+              if( ret_gameuser != undefined  ){                
                 res.resp["game_user"].push(ret_gameuser.toObject());                                
               }
             } else {
               res.resp.RESULT = ERR.ERROR_CODE.FAILED_CREATE_SESSION;
             }          
           } else {
-            let ret = await common_users.tempUser(uniqueid);
+            let ret = await common_users.tempUser(uniqueid, req.geo ? req.geo.country : "ZZ");
             if( ret != null ){
               let newuser = await common_users.newUser(ret);
               let session = await userMgr.setUserLoginSession(newuser.uid);
               if( session != undefined ) {
-                res.resp["session"] = JSON.parse(session);
+                res.resp["session"] = JSON.parse(session).uuid;
                 res.resp.RESULT = 0;              
                 let ret_gameuser = await user_info.newData(newuser.uid);
                 res.resp["userinfo"] = [];
