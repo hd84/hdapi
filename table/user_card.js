@@ -50,7 +50,7 @@ exports.tempUserCard = async function(uid, did, count = 0) {
     data.did = did;
     data.lv = 1;
     data.exp = 0;
-    data.count = count;
+    data.count = count > 0 ? count : count - 1;
     data.created_at = datetime.now();
     data.updated_at = datetime.now();    
     let ret = new TB_USER_CARD(data);
@@ -70,7 +70,7 @@ exports.newUserCard = async function(uid, did) {
     data.did = did;
     data.lv = 1;
     data.exp = 0;
-    data.count = 1;
+    data.count = 0;
     data.created_at = datetime.now();
     data.updated_at = datetime.now();
     const query = table.query().insert(data);
