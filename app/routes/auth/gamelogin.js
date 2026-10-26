@@ -46,7 +46,7 @@ class gamelogin extends router_lib {
               res.resp["game_user"] = [];
               let ret_gameuser = await user_info.getUserByUid(userObj.uid);
               if( ret_gameuser != undefined  ){
-                await ret_gameuser.refreshHeart();
+                ret_gameuser.refreshHeart();
                 await ret_gameuser.updateData();            
                 res.resp["game_user"].push(ret_gameuser.toObject());                                
               }

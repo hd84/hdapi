@@ -82,6 +82,9 @@ exports.rewardComplete = async function( res ) {
       case DEF.REWARD_TYPE.GEM_FREE:      
         res.cached.userdata.gem_free = res.cached.userdata.gem_free + count;
         break;
+      case DEF.REWARD_TYPE.HEART:      
+        res.cached.userdata.addHeart(count);
+        break;
       case DEF.REWARD_TYPE.CARD:
         if( user_card_object[value] != undefined ){
           user_card_object[value].count = user_card_object[value].count + count;
@@ -98,8 +101,11 @@ exports.rewardComplete = async function( res ) {
 
   res.resp.reward_list = res.cached.reward;
 
+  // userinfo update 
   await res.cached.userdata.updateData();
   res.resp.game_user = res.cached.userdata.toObject();
+
+  // card update
   if( insert_card_list.length > 0 ){
     await user_card.insertList(insert_card_list);
   }
@@ -107,6 +113,7 @@ exports.rewardComplete = async function( res ) {
     await user_card.updateList(update_card_list);
   }
 
+  // reward cleanup
   res.cached.reward_count = undefined;
   res.cached.reward = undefined;
 }

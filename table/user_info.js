@@ -25,9 +25,15 @@ class TB_USER_INFO extends DB_TABLE {
     if (row) this.setData(row);
   }
 
-  refreshHeart = async function() {
+  refreshHeart = function() {
     const max_heart = global.GAME_DEFINE["MAX_HEART"];
     const diff_time = datetime.TIMESTAMP(null,  "seconds") - datetime.TIMESTAMP(this.heart_at, "seconds");
+
+    // 최대치에선 시간만 갱신
+    if( this.heart >= max_heart ) {
+      this.heart_at = datetime.now();
+      return;
+    }
     if( diff_time > 0 ){
       let add_heart = Math.floor(diff_time / global.GAME_DEFINE["HEART_RECOVER_TIME"]);
       this.heart = Math.min(this.heart + add_heart, max_heart);
@@ -36,10 +42,14 @@ class TB_USER_INFO extends DB_TABLE {
         this.heart_at = datetime.addsecond(datetime.now(), -(diff_time % global.GAME_DEFINE["HEART_RECOVER_TIME"]));
       } else {
         this.heart_at = datetime.now();
-      }
-        
+      }        
     }
-  }  
+  }
+
+  addHeart = async function(count) {
+    this.refreshHeart();
+    this.heart += count;
+  }
 };
 
 exports.query = async function( query ){
@@ -88,7 +98,7 @@ exports.getUserByUid = async function (uid) {
     if( rows.length == 0) return null;    
 
     let ret = new TB_USER_INFO(rows[0]);
-    await ret.refreshHeart();
+    ret.refreshHeart();
     await ret.updateData();
     return ret;
   } catch (err) {
