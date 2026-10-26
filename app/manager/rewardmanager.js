@@ -125,7 +125,7 @@ exports.gacha = async function( res, gacha_id ) {
     // process gacha data if needed
     if(gachadata.groupid == gacha_id) {
       gacha_list.push(gachadata);
-      max_rand = gachadata.maxprob;
+      max_rand += parseInt(gachadata.prob);
     }
   })  ;
 
@@ -133,11 +133,11 @@ exports.gacha = async function( res, gacha_id ) {
     let randval = commonfunc.getRandomInt(1, max_rand);
     let selected_gacha = null;
     for(const gacha of gacha_list) {
-      if(randval <= gacha.prob) {
+      if(randval <= parseInt(gacha.prob)) {
         selected_gacha = gacha;
         break;
       } else {
-        randval -= gacha.prob;
+        randval -= parseInt(gacha.prob);
       }                
     }
 
