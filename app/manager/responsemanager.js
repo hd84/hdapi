@@ -66,3 +66,14 @@ exports.reward_list = [{
     value:{type:"number", desc : "reward value"},
     count:{type:"number", desc : "reward count"}
 }];
+
+exports.shop_goods_list = [{
+    idx:{type:"number", desc : "goods ID"},
+    name:{type:"string", desc : "goods name"},
+    type:{type:"number", desc : "goods type"},
+    use_type:{type:"number", desc : "use type"},
+    use_value:{type:"number", desc : "use value"},
+    use_count:{type:"number", desc : "use count"},
+    reward_id:{type:"number", desc : "reward ID"},
+    count:{type:"number", desc : "reward count"},    
+}];

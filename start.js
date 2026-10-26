@@ -281,6 +281,7 @@ function setRoute() {
   addRouter('user/characters');
 
   addRouter('shop/buygoods');
+  addRouter('shop/goodslist');
 
   addRouter('common/notice');
   addRouter('common/packetjson');
