@@ -24,6 +24,7 @@ class gamelogin extends router_lib {
       var uniqueid = param['uniqueid'];
 
       global.logger.info("type1=%s, uniqueid=%s", type1, uniqueid);
+      global.logger.info("req ip country : ", req.geo ? req.geo.country : "unknown");
 
       // db에 있는 데이터 읽어서 보낼때
       if (type1 == 'db') {                

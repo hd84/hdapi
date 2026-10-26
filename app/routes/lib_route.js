@@ -6,6 +6,8 @@ const ERR = require('../data/errors');
 const userMgr = require('../manager/usermanager');
 const Lib_Response = require('../utils/lib_response');
 
+const geoip = require('geoip-country');
+
 const asyncHandler = (requestHandler) => {
   return async (req, res, next) => {
     try {
@@ -83,6 +85,13 @@ class LibRouter extends express.Router {
         ip_address = req.connection.remoteAddress;
       }
 
+      let geo = geoip.lookup(ip_address);
+      if( geo == undefined ){
+        geo = { country: "unknown", city: "unknown" };
+      }
+        
+        
+      req.geo = geo;
       req.ip_address = ip_address;
     }
 
