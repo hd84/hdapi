@@ -106,6 +106,9 @@ exports.rewardComplete = async function( res ) {
   if( update_card_list.length > 0 ){
     await user_card.updateList(update_card_list);
   }
+
+  res.cached.reward_count = undefined;
+  res.cached.reward = undefined;
 }
 
 exports.gacha = async function( res, gacha_id ) {

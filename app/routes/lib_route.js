@@ -4,6 +4,7 @@ const DEF = require('../data/defines');
 const ERR = require('../data/errors');
 
 const userMgr = require('../manager/usermanager');
+const Lib_Response = require('../utils/lib_response');
 
 const asyncHandler = (requestHandler) => {
   return async (req, res, next) => {
@@ -63,6 +64,7 @@ class LibRouter extends express.Router {
     }
 
     this.preRoute = async function(req, res){
+      Lib_Response.attach(res);
       res.once('finish', () => {
         this.afterRoute(req, res).catch(err => global.logger.error("afterRoute error: %s", err));
       });
@@ -135,7 +137,7 @@ class LibRouter extends express.Router {
           if( res.resp.RESULT  == ERR.ERROR_CODE.SUCCESS ){
             this.get_route_func(req, res, reqToParams(req));
           } else {
-            res.send(JSON.stringify(res.resp));
+            res.complete();
           }
         } else{
           res.send('NOT SUPPORTED');
@@ -155,7 +157,7 @@ class LibRouter extends express.Router {
         if( res.resp.RESULT  == ERR.ERROR_CODE.SUCCESS ){
           this.post_route_func(req, res, reqToParams(req));
         } else {
-          res.send(JSON.stringify(res.resp));
+          res.complete();
         }
         
       } else {

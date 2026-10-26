@@ -35,22 +35,21 @@ class buygoods extends router_lib {
           let resourceCheckResult = await rewardMgr.resourceCheck(res, goods_data.use_type, goods_data.use_value, goods_data.use_count);
           if( resourceCheckResult == false ){
             res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_RESOURCE;
-            res.send(JSON.stringify(res.resp));
+            res.complete();
             return;
           }
 
           await rewardMgr.reward( res, goods_data.use_type, goods_data.use_value, -goods_data.use_count );
 
           if( goods_data.type == DEF.SHOP_GOODS_TYPE.GACHA){            
-            await rewardMgr.gacha(res, goods_data.reward_id);
-            await rewardMgr.rewardComplete(res);        
+            await rewardMgr.gacha(res, goods_data.reward_id);            
           }
         } else {
           res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
         }
-        res.send(JSON.stringify(res.resp));
+        res.complete();
       } else {
-        res.send('ERROR check type and subtype');
+        res.completeText('ERROR check type and subtype');
       }
               
     }
