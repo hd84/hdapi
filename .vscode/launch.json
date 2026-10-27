@@ -27,6 +27,14 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\start.js",
       "args": ["--config", "config.json", "--mode", "unityreq"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "windows 11 jsonmerge",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\start.js",
+      "args": ["--config", "config.json", "--mode", "jsonmerge"]
     }
   ]
 }

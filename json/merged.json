@@ -1,0 +1,382 @@
+{
+  "card_data": {
+    "4001": {
+      "idx": 4001,
+      "name": "a",
+      "rarity": 1,
+      "img": 4001,
+      "icon": "atk"
+    },
+    "4002": {
+      "idx": 4002,
+      "name": "b",
+      "rarity": 1,
+      "img": 4002,
+      "icon": "atk"
+    },
+    "4003": {
+      "idx": 4003,
+      "name": "c",
+      "rarity": 2,
+      "img": 4003,
+      "icon": "def"
+    },
+    "4004": {
+      "idx": 4004,
+      "name": "d",
+      "rarity": 3,
+      "img": 4004,
+      "icon": "def"
+    },
+    "4005": {
+      "idx": 4005,
+      "name": "e",
+      "rarity": 4,
+      "img": 4005,
+      "icon": "def"
+    },
+    "4006": {
+      "idx": 4006,
+      "name": "f",
+      "rarity": 1,
+      "img": 4006,
+      "icon": "atk"
+    },
+    "4007": {
+      "idx": 4007,
+      "name": "g",
+      "rarity": 1,
+      "img": 4007,
+      "icon": "atk"
+    },
+    "4008": {
+      "idx": 4008,
+      "name": "h",
+      "rarity": 1,
+      "img": 4008,
+      "icon": "def"
+    },
+    "4009": {
+      "idx": 4009,
+      "name": "i",
+      "rarity": 1,
+      "img": 4009,
+      "icon": "def"
+    },
+    "4010": {
+      "idx": 4010,
+      "name": "j",
+      "rarity": 1,
+      "img": 4010,
+      "icon": "atk"
+    },
+    "4011": {
+      "idx": 4011,
+      "name": "k",
+      "rarity": 1,
+      "img": 4011,
+      "icon": "atk"
+    },
+    "4012": {
+      "idx": 4012,
+      "name": "l",
+      "rarity": 1,
+      "img": 4012,
+      "icon": "def"
+    },
+    "4013": {
+      "idx": 4013,
+      "name": "m",
+      "rarity": 1,
+      "img": 4013,
+      "icon": "def"
+    },
+    "4014": {
+      "idx": 4014,
+      "name": "n",
+      "rarity": 4,
+      "img": 4014,
+      "icon": "atk"
+    },
+    "4015": {
+      "idx": 4015,
+      "name": "o",
+      "rarity": 3,
+      "img": 4015,
+      "icon": "atk"
+    },
+    "4016": {
+      "idx": 4016,
+      "name": "p",
+      "rarity": 2,
+      "img": 4016,
+      "icon": "def"
+    },
+    "4017": {
+      "idx": 4017,
+      "name": "q",
+      "rarity": 2,
+      "img": 4017,
+      "icon": "def"
+    },
+    "4018": {
+      "idx": 4018,
+      "name": "r",
+      "rarity": 1,
+      "img": 4018,
+      "icon": "atk"
+    },
+    "4019": {
+      "idx": 4019,
+      "name": "s",
+      "rarity": 1,
+      "img": 4019,
+      "icon": "atk"
+    },
+    "4020": {
+      "idx": 4020,
+      "name": "t",
+      "rarity": 1,
+      "img": 4020,
+      "icon": "atk"
+    }
+  },
+  "gacha_data": {
+    "1": {
+      "idx": 1,
+      "groupid": 1,
+      "reward_type": 5,
+      "reward_value": 4001,
+      "reward_count": 1,
+      "prob": 1000,
+      "maxprob": 4000
+    },
+    "2": {
+      "idx": 2,
+      "groupid": 1,
+      "reward_type": 5,
+      "reward_value": 4002,
+      "reward_count": 1,
+      "prob": 1000,
+      "maxprob": 4000
+    },
+    "3": {
+      "idx": 3,
+      "groupid": 1,
+      "reward_type": 5,
+      "reward_value": 4003,
+      "reward_count": 1,
+      "prob": 1000,
+      "maxprob": 4000
+    },
+    "4": {
+      "idx": 4,
+      "groupid": 1,
+      "reward_type": 5,
+      "reward_value": 4004,
+      "reward_count": 1,
+      "prob": 1000,
+      "maxprob": 4000
+    },
+    "5": {
+      "idx": 5,
+      "groupid": 2,
+      "reward_type": 5,
+      "reward_value": 4001,
+      "reward_count": 1,
+      "prob": 100,
+      "maxprob": 42100
+    },
+    "6": {
+      "idx": 6,
+      "groupid": 2,
+      "reward_type": 5,
+      "reward_value": 4002,
+      "reward_count": 1,
+      "prob": 10000,
+      "maxprob": 42100
+    },
+    "7": {
+      "idx": 7,
+      "groupid": 2,
+      "reward_type": 5,
+      "reward_value": 4003,
+      "reward_count": 1,
+      "prob": 10000,
+      "maxprob": 42100
+    },
+    "8": {
+      "idx": 8,
+      "groupid": 2,
+      "reward_type": 5,
+      "reward_value": 4004,
+      "reward_count": 1,
+      "prob": 10000,
+      "maxprob": 42100
+    },
+    "9": {
+      "idx": 9,
+      "groupid": 2,
+      "reward_type": 5,
+      "reward_value": 4005,
+      "reward_count": 1,
+      "prob": 10000,
+      "maxprob": 42100
+    },
+    "10": {
+      "idx": 10,
+      "groupid": 2,
+      "reward_type": 5,
+      "reward_value": 4006,
+      "reward_count": 1,
+      "prob": 1000,
+      "maxprob": 42100
+    },
+    "11": {
+      "idx": 11,
+      "groupid": 2,
+      "reward_type": 5,
+      "reward_value": 4007,
+      "reward_count": 1,
+      "prob": 1000,
+      "maxprob": 42100
+    },
+    "12": {
+      "idx": 12,
+      "groupid": 3,
+      "reward_type": 5,
+      "reward_value": 4008,
+      "reward_count": 1,
+      "prob": 1000000,
+      "maxprob": 2000001
+    },
+    "13": {
+      "idx": 13,
+      "groupid": 3,
+      "reward_type": 5,
+      "reward_value": 4009,
+      "reward_count": 1,
+      "prob": 1000000,
+      "maxprob": 2000001
+    },
+    "14": {
+      "idx": 14,
+      "groupid": 3,
+      "reward_type": 5,
+      "reward_value": 4010,
+      "reward_count": 1,
+      "prob": 1,
+      "maxprob": 2000001
+    },
+    "15": {
+      "idx": 15,
+      "groupid": 4,
+      "reward_type": 5,
+      "reward_value": 4001,
+      "reward_count": 1,
+      "prob": 100,
+      "maxprob": 200
+    },
+    "16": {
+      "idx": 16,
+      "groupid": 4,
+      "reward_type": 5,
+      "reward_value": 4002,
+      "reward_count": 1,
+      "prob": 100,
+      "maxprob": 200
+    },
+    "17": {
+      "idx": 17,
+      "groupid": 5,
+      "reward_type": 5,
+      "reward_value": 4011,
+      "reward_count": 1,
+      "prob": 1000,
+      "maxprob": 3100
+    },
+    "18": {
+      "idx": 18,
+      "groupid": 5,
+      "reward_type": 5,
+      "reward_value": 4012,
+      "reward_count": 1,
+      "prob": 1000,
+      "maxprob": 3100
+    },
+    "19": {
+      "idx": 19,
+      "groupid": 5,
+      "reward_type": 5,
+      "reward_value": 4013,
+      "reward_count": 1,
+      "prob": 1000,
+      "maxprob": 3100
+    },
+    "20": {
+      "idx": 20,
+      "groupid": 5,
+      "reward_type": 5,
+      "reward_value": 4014,
+      "reward_count": 1,
+      "prob": 100,
+      "maxprob": 3100
+    }
+  },
+  "patchinfo": {
+    "name": "patchinfo",
+    "patch_exclude": "0"
+  },
+  "shop_goods_data": {
+    "1": {
+      "idx": 1,
+      "name": "goods1",
+      "type": 1,
+      "use_type": 3,
+      "use_value": 0,
+      "use_count": 10,
+      "reward_id": 1,
+      "count": 1
+    },
+    "2": {
+      "idx": 2,
+      "name": "goods2",
+      "type": 1,
+      "use_type": 3,
+      "use_value": 0,
+      "use_count": 20,
+      "reward_id": 2,
+      "count": 11
+    },
+    "3": {
+      "idx": 3,
+      "name": "goods3",
+      "type": 1,
+      "use_type": 3,
+      "use_value": 0,
+      "use_count": 10,
+      "reward_id": 3,
+      "count": 1
+    },
+    "4": {
+      "idx": 4,
+      "name": "goods4",
+      "type": 1,
+      "use_type": 3,
+      "use_value": 0,
+      "use_count": 10,
+      "reward_id": 4,
+      "count": 1
+    },
+    "5": {
+      "idx": 5,
+      "name": "goods5",
+      "type": 1,
+      "use_type": 3,
+      "use_value": 0,
+      "use_count": 10,
+      "reward_id": 5,
+      "count": 1
+    }
+  }
+}

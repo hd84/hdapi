@@ -242,6 +242,10 @@ async function _main() {
     unityGenerator.CreateUnityHTTPRequestMgrFile(global.MapRouter);
     process.exit(1);
     // Unity request mode handling
+  } else if( global.launch_config_args["mode"] === "jsonmerge") {
+    const jsonmerge = require('./app/utils/jsonmerge.js');
+    jsonmerge.mergejson();
+    process.exit(1);
   }
 }
 
