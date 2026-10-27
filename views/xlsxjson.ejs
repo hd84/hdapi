@@ -542,7 +542,7 @@
 
       const rows = XLSX.utils.sheet_to_json(worksheet, {
         defval: '',
-        raw: false
+        raw: true
       });
 
       jsonText = JSON.stringify(rows, null, 2);

@@ -1,182 +1,182 @@
 [
   {
-    "idx": "1",
-    "groupid": "1",
-    "reward_type": "5",
-    "reward_value": "4001",
-    "reward_count": "1",
-    "prob": "1000",
-    "maxprob": "4000"
+    "idx": 1,
+    "groupid": 1,
+    "reward_type": 5,
+    "reward_value": 4001,
+    "reward_count": 1,
+    "prob": 1000,
+    "maxprob": 4000
   },
   {
-    "idx": "2",
-    "groupid": "1",
-    "reward_type": "5",
-    "reward_value": "4002",
-    "reward_count": "1",
-    "prob": "1000",
-    "maxprob": "4000"
+    "idx": 2,
+    "groupid": 1,
+    "reward_type": 5,
+    "reward_value": 4002,
+    "reward_count": 1,
+    "prob": 1000,
+    "maxprob": 4000
   },
   {
-    "idx": "3",
-    "groupid": "1",
-    "reward_type": "5",
-    "reward_value": "4003",
-    "reward_count": "1",
-    "prob": "1000",
-    "maxprob": "4000"
+    "idx": 3,
+    "groupid": 1,
+    "reward_type": 5,
+    "reward_value": 4003,
+    "reward_count": 1,
+    "prob": 1000,
+    "maxprob": 4000
   },
   {
-    "idx": "4",
-    "groupid": "1",
-    "reward_type": "5",
-    "reward_value": "4004",
-    "reward_count": "1",
-    "prob": "1000",
-    "maxprob": "4000"
+    "idx": 4,
+    "groupid": 1,
+    "reward_type": 5,
+    "reward_value": 4004,
+    "reward_count": 1,
+    "prob": 1000,
+    "maxprob": 4000
   },
   {
-    "idx": "5",
-    "groupid": "2",
-    "reward_type": "5",
-    "reward_value": "4001",
-    "reward_count": "1",
-    "prob": "100",
-    "maxprob": "42100"
+    "idx": 5,
+    "groupid": 2,
+    "reward_type": 5,
+    "reward_value": 4001,
+    "reward_count": 1,
+    "prob": 100,
+    "maxprob": 42100
   },
   {
-    "idx": "6",
-    "groupid": "2",
-    "reward_type": "5",
-    "reward_value": "4002",
-    "reward_count": "1",
-    "prob": "10000",
-    "maxprob": "42100"
+    "idx": 6,
+    "groupid": 2,
+    "reward_type": 5,
+    "reward_value": 4002,
+    "reward_count": 1,
+    "prob": 10000,
+    "maxprob": 42100
   },
   {
-    "idx": "7",
-    "groupid": "2",
-    "reward_type": "5",
-    "reward_value": "4003",
-    "reward_count": "1",
-    "prob": "10000",
-    "maxprob": "42100"
+    "idx": 7,
+    "groupid": 2,
+    "reward_type": 5,
+    "reward_value": 4003,
+    "reward_count": 1,
+    "prob": 10000,
+    "maxprob": 42100
   },
   {
-    "idx": "8",
-    "groupid": "2",
-    "reward_type": "5",
-    "reward_value": "4004",
-    "reward_count": "1",
-    "prob": "10000",
-    "maxprob": "42100"
+    "idx": 8,
+    "groupid": 2,
+    "reward_type": 5,
+    "reward_value": 4004,
+    "reward_count": 1,
+    "prob": 10000,
+    "maxprob": 42100
   },
   {
-    "idx": "9",
-    "groupid": "2",
-    "reward_type": "5",
-    "reward_value": "4005",
-    "reward_count": "1",
-    "prob": "10000",
-    "maxprob": "42100"
+    "idx": 9,
+    "groupid": 2,
+    "reward_type": 5,
+    "reward_value": 4005,
+    "reward_count": 1,
+    "prob": 10000,
+    "maxprob": 42100
   },
   {
-    "idx": "10",
-    "groupid": "2",
-    "reward_type": "5",
-    "reward_value": "4006",
-    "reward_count": "1",
-    "prob": "1000",
-    "maxprob": "42100"
+    "idx": 10,
+    "groupid": 2,
+    "reward_type": 5,
+    "reward_value": 4006,
+    "reward_count": 1,
+    "prob": 1000,
+    "maxprob": 42100
   },
   {
-    "idx": "11",
-    "groupid": "2",
-    "reward_type": "5",
-    "reward_value": "4007",
-    "reward_count": "1",
-    "prob": "1000",
-    "maxprob": "42100"
+    "idx": 11,
+    "groupid": 2,
+    "reward_type": 5,
+    "reward_value": 4007,
+    "reward_count": 1,
+    "prob": 1000,
+    "maxprob": 42100
   },
   {
-    "idx": "12",
-    "groupid": "3",
-    "reward_type": "5",
-    "reward_value": "4008",
-    "reward_count": "1",
-    "prob": "1000000",
-    "maxprob": "2000001"
+    "idx": 12,
+    "groupid": 3,
+    "reward_type": 5,
+    "reward_value": 4008,
+    "reward_count": 1,
+    "prob": 1000000,
+    "maxprob": 2000001
   },
   {
-    "idx": "13",
-    "groupid": "3",
-    "reward_type": "5",
-    "reward_value": "4009",
-    "reward_count": "1",
-    "prob": "1000000",
-    "maxprob": "2000001"
+    "idx": 13,
+    "groupid": 3,
+    "reward_type": 5,
+    "reward_value": 4009,
+    "reward_count": 1,
+    "prob": 1000000,
+    "maxprob": 2000001
   },
   {
-    "idx": "14",
-    "groupid": "3",
-    "reward_type": "5",
-    "reward_value": "4010",
-    "reward_count": "1",
-    "prob": "1",
-    "maxprob": "2000001"
+    "idx": 14,
+    "groupid": 3,
+    "reward_type": 5,
+    "reward_value": 4010,
+    "reward_count": 1,
+    "prob": 1,
+    "maxprob": 2000001
   },
   {
-    "idx": "15",
-    "groupid": "4",
-    "reward_type": "5",
-    "reward_value": "4001",
-    "reward_count": "1",
-    "prob": "100",
-    "maxprob": "200"
+    "idx": 15,
+    "groupid": 4,
+    "reward_type": 5,
+    "reward_value": 4001,
+    "reward_count": 1,
+    "prob": 100,
+    "maxprob": 200
   },
   {
-    "idx": "16",
-    "groupid": "4",
-    "reward_type": "5",
-    "reward_value": "4002",
-    "reward_count": "1",
-    "prob": "100",
-    "maxprob": "200"
+    "idx": 16,
+    "groupid": 4,
+    "reward_type": 5,
+    "reward_value": 4002,
+    "reward_count": 1,
+    "prob": 100,
+    "maxprob": 200
   },
   {
-    "idx": "17",
-    "groupid": "5",
-    "reward_type": "5",
-    "reward_value": "4011",
-    "reward_count": "1",
-    "prob": "1000",
-    "maxprob": "3100"
+    "idx": 17,
+    "groupid": 5,
+    "reward_type": 5,
+    "reward_value": 4011,
+    "reward_count": 1,
+    "prob": 1000,
+    "maxprob": 3100
   },
   {
-    "idx": "18",
-    "groupid": "5",
-    "reward_type": "5",
-    "reward_value": "4012",
-    "reward_count": "1",
-    "prob": "1000",
-    "maxprob": "3100"
+    "idx": 18,
+    "groupid": 5,
+    "reward_type": 5,
+    "reward_value": 4012,
+    "reward_count": 1,
+    "prob": 1000,
+    "maxprob": 3100
   },
   {
-    "idx": "19",
-    "groupid": "5",
-    "reward_type": "5",
-    "reward_value": "4013",
-    "reward_count": "1",
-    "prob": "1000",
-    "maxprob": "3100"
+    "idx": 19,
+    "groupid": 5,
+    "reward_type": 5,
+    "reward_value": 4013,
+    "reward_count": 1,
+    "prob": 1000,
+    "maxprob": 3100
   },
   {
-    "idx": "20",
-    "groupid": "5",
-    "reward_type": "5",
-    "reward_value": "4014",
-    "reward_count": "1",
-    "prob": "100",
-    "maxprob": "3100"
+    "idx": 20,
+    "groupid": 5,
+    "reward_type": 5,
+    "reward_value": 4014,
+    "reward_count": 1,
+    "prob": 100,
+    "maxprob": 3100
   }
 ]
