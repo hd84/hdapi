@@ -46,7 +46,9 @@ class buygoods extends router_lib {
           await rewardMgr.reward( res, goods_data.use_type, goods_data.use_value, -goods_data.use_count );
 
           if( goods_data.type == DEF.SHOP_GOODS_TYPE.GACHA){            
-            await rewardMgr.gacha(res, goods_data.reward_id);            
+            for( let i = 0; i < goods_data.count; i++ ){
+              await rewardMgr.gacha(res, goods_data.reward_id);            
+            }              
           }
         } else {
           res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
