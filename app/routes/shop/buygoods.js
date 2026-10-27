@@ -30,8 +30,12 @@ class buygoods extends router_lib {
         if( res.cached.userdata != undefined  ){
           res.resp.RESULT = 0;                    
           
-          const goods_data = global.GameData["shop_goods_data"].find(g => g.idx == goods_id);
-
+          const goods_data = global.GameData["shop_goods_data"][goods_id];
+          if( goods_data == undefined ){
+            res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_GOODS;
+            res.complete();
+            return;
+          }
           let resourceCheckResult = await rewardMgr.resourceCheck(res, goods_data.use_type, goods_data.use_value, goods_data.use_count);
           if( resourceCheckResult == false ){
             res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_RESOURCE;

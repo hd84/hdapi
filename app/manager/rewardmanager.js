@@ -121,7 +121,8 @@ exports.rewardComplete = async function( res ) {
 exports.gacha = async function( res, gacha_id ) {
   let gacha_list = [];
   let max_rand = 0;
-  global.GameData["gacha_data"].forEach(gachadata => {
+  Object.keys(global.GameData["gacha_data"]).forEach(key => {
+    const gachadata = global.GameData["gacha_data"][key];
     // process gacha data if needed
     if(gachadata.groupid == gacha_id) {
       gacha_list.push(gachadata);

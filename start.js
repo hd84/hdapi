@@ -343,19 +343,13 @@ function GetServerMode() {
 }
 
 function loadJsonData() {
-  const jsonDir = path.join(__dirname, 'json');
   global.GameData = {};
 
-  fs.readdirSync(jsonDir)
-    .filter(file => path.extname(file).toLowerCase() === '.json')
-    .forEach(file => {
-      const name = path.basename(file, '.json');
-      try {
-        global.GameData[name] = JSON.parse(fs.readFileSync(path.join(jsonDir, file), 'utf8'));
-      } catch (err) {
-        global.logger.error("JSON load failed: %s, %s", file, err.message);
-      }
-    });
+  try {
+    global.GameData = JSON.parse(fs.readFileSync(path.join(__dirname, 'json', 'merged.json'), 'utf8'));
+  } catch (err) {
+    global.logger.error("JSON load failed: merged.json, %s", err.message);
+  }
 
   global.logger.info("GameData loaded: %s", Object.keys(global.GameData).join(', '));
 }
