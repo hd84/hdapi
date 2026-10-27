@@ -9,9 +9,9 @@ const commonfunc = require('../routes/common/commonfunc');
 exports.reward = async function( res, type, value, count ) {
   console.log(`Rewarding: type=${type}, value=${value}, count=${count}`);
 
-  const num_type = parseInt(type);
-  const num_value = parseInt(value);
-  const num_count = parseInt(count);
+  const num_type = type;
+  const num_value = value;
+  const num_count = count;
 
   let userdata = res.cached.userdata;
 
@@ -39,7 +39,7 @@ exports.resourceCheck = async function( res, type, value, count ) {
     return false;
   }
 
-  switch ( parseInt(type) ) {
+  switch ( type ) {
     case DEF.REWARD_TYPE.GOLD:
       return (userdata.gold || 0) >= count;
     case DEF.REWARD_TYPE.GEM_PAID:
@@ -125,7 +125,7 @@ exports.gacha = async function( res, gacha_id ) {
     // process gacha data if needed
     if(gachadata.groupid == gacha_id) {
       gacha_list.push(gachadata);
-      max_rand += parseInt(gachadata.prob);
+      max_rand += gachadata.prob;
     }
   })  ;
 
@@ -133,11 +133,11 @@ exports.gacha = async function( res, gacha_id ) {
     let randval = commonfunc.getRandomInt(1, max_rand);
     let selected_gacha = null;
     for(const gacha of gacha_list) {
-      if(randval <= parseInt(gacha.prob)) {
+      if(randval <= gacha.prob) {
         selected_gacha = gacha;
         break;
       } else {
-        randval -= parseInt(gacha.prob);
+        randval -= gacha.prob;
       }                
     }
 
