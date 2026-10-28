@@ -1,5 +1,6 @@
 const router_lib = require('../lib_route');
 const ERR = require('../../data/errors');
+const DEF = require('../../data/defines');
 const common_users = require('../../../table/common_users');
 const user_info = require('../../../table/user_info');
 const user_card = require('../../../table/user_card');
@@ -7,6 +8,7 @@ const user_card = require('../../../table/user_card');
 const userMgr = require('../../manager/usermanager');
 const respMgr = require('../../manager/responsemanager');
 
+const rewardMgr = require('../../manager/rewardmanager');
 
 class cardmerge extends router_lib {
   constructor() {
@@ -25,23 +27,49 @@ class cardmerge extends router_lib {
       global.logger.info("type1=%s, uid=%s, auto=%s, cards=%s", type1, uid, auto, cards);
 
       // db에 있는 데이터 읽어서 보낼때
-      if (type1 == 'db') {                
-        if( res.resp == undefined ){
-          res.resp = {};
-        }
+      if (type1 == 'db') {                        
         if( res.cached.userdata != undefined  ){
           res.resp.RESULT = 0;                    
           let ret_usercard = await user_card.getCards(uid);
-          res.resp["user_card"] = [];
           if( ret_usercard != undefined ){
-            ret_usercard.forEach(card => {
-              res.resp["user_card"].push(card.toObject());
-            });
+            if( auto == 0 ){
+
+            } else {              
+              //let merge_result = rewardMgr.card_merge(res, auto, 10);
+
+              let cards = [];
+              for(const card of ret_usercard) {
+                if( card.rarity == auto ){
+                  for( let i = 0; i < card.count; i++ ){
+                    cards.push(card);
+                  }
+                  
+                  let remain_card_count = cards.length % 4;
+                  if( remain_card_count > 0 ){
+                    cards.splice( -remain_card_count, remain_card_count);
+                  }
+
+                  let merge_count = Math.floor(cards.length / 4);
+                  if( merge_result.length > 0 ){
+                    for( let i = 0; i < merge_result.length; i++ ){
+                      await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result[i], -1 );
+                    }
+                    
+                  } else {
+                    res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_CARD_MERGE;
+                  }
+                }
+              }
+            }
           }
+                    
+          
+          res.resp["user_card"] = [];
+          
         } else {
           res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
         }
-        res.send(JSON.stringify(res.resp));
+        res.complete();
       } else {
         res.send('ERROR check type and subtype');
       }

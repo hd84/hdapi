@@ -333,8 +333,14 @@
 
       let formData = new FormData(document.getElementById('apiForm'));
       let obj_param = {};
-      for (let [key, value] of formData.entries()) {      
-        obj_param[key.slice(6)] = value;      
+      const cur_parts = current_endpoint.split('/').filter(Boolean);
+      const cur_cate = cur_parts.length > 1 ? cur_parts[0] : "root";
+      const cur_api = cur_parts[cur_parts.length - 1];
+      const cur_req = (route_data[cur_cate] && route_data[cur_cate][cur_api] && route_data[cur_cate][cur_api]["REQUEST_DATA"]) || {};
+      for (let [key, value] of formData.entries()) {
+        const name = key.slice(6);
+        const isNumber = cur_req[name] && cur_req[name].type == "number";
+        obj_param[name] = (isNumber && value.trim() !== "" && !isNaN(Number(value))) ? Number(value) : value;
       }
       obj_param["type"] = "db";
 

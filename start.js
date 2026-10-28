@@ -282,6 +282,12 @@ function setRoute() {
 
   addRouter('user/userinfo');
   addRouter('user/cards');
+  addRouter('user/cardmerge');
+
+
+  if( global.config.server_env == "local")
+    addRouter('user/cardmergetest');
+
   addRouter('user/characters');
 
   addRouter('shop/buygoods');

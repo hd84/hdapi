@@ -148,3 +148,40 @@ exports.gacha = async function( res, gacha_id ) {
     }    
   }
 }
+
+exports.card_merge = function( res, rarity, count ) {
+  global.GameData["card_data"]
+  let success_card_list = [];
+  let fail_card_list = [];
+  Object.keys(global.GameData["card_data"]).forEach(key => {
+    const carddata = global.GameData["card_data"][key];
+    if(carddata.rarity == rarity + 1) {
+      success_card_list.push(carddata);
+    }
+
+    if(carddata.rarity == rarity) {
+      fail_card_list.push(carddata);
+    }
+  });
+
+  let result_card = {success: [], fail: [], success_count: 0, fail_count: 0};
+  for( let i = 0; i < count; i++ ){
+    let success_rand = commonfunc.getRandomInt(1, 100);
+    if( success_rand <= global.config["card_merge_rarity_" + rarity] ) {
+      let max_rand = success_card_list.length;
+      let rand_index = commonfunc.getRandomInt(1, max_rand) - 1;
+      let card = success_card_list[rand_index];
+      //await this.reward( res, DEF.REWARD_TYPE.CARD, card.id, 1);
+      result_card.success.push(card.idx);
+      result_card.success_count++;
+    } else {
+      let max_rand = fail_card_list.length;
+      let rand_index = commonfunc.getRandomInt(1, max_rand) - 1;
+      let card = fail_card_list[rand_index];
+      //await this.reward( res, DEF.REWARD_TYPE.CARD, card.id, 1);
+      result_card.fail.push(card.idx);
+      result_card.fail_count++;
+    }
+  }
+  return result_card;
+}
