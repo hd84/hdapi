@@ -33,7 +33,19 @@ class cardmerge extends router_lib {
           let ret_usercard = await user_card.getCards(uid);
           if( ret_usercard != undefined ){
             if( auto == 0 ){
+              try {
+                let test_cards = JSON.parse(cards);
+                cards = test_cards;
+              } catch (error) {
+                global.logger.warn("Invalid cards JSON: %s", error.message);
+                res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
+              }
 
+              if( res.resp.RESULT == ERR.ERROR_CODE.SUCCESS &&
+                  (!Array.isArray(cards) || !cards.every(card => typeof card === 'string')) ){
+                global.logger.warn("Invalid cards parameter; expected an array of card strings");
+                res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
+              }
             } else {                            
               let cards = [];
               for(const card of ret_usercard) {
@@ -42,30 +54,32 @@ class cardmerge extends router_lib {
                     cards.push(card);
                   }
                   
-                  let remain_card_count = cards.length % 4;
-                  if( remain_card_count > 0 ){
-                    cards.splice( -remain_card_count, remain_card_count);
+                  if( cards.length < 4 ){
+                    res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_CARD_MERGE;
+                  } else {
+                    let remain_card_count = cards.length % 4;
+                    if( remain_card_count > 0 ){
+                      cards.splice( -remain_card_count, remain_card_count);
+                    }
+
+                    let merge_count = Math.floor(cards.length / 4);
+                    let merge_result = rewardMgr.card_merge(res, auto, merge_count);
+
+                    if( merge_result.success.length > 0 ){
+                      for( let i = 0; i < merge_result.success.length; i++ ){
+                        await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result.success[i], 1 );
+                      }                    
+                    } 
+
+                    if( merge_result.fail.length > 0 ){
+                      for( let i = 0; i < merge_result.fail.length; i++ ){
+                        await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result.fail[i], 1 );
+                      }                    
+                    } 
+
+                    res.resp["merge_result"] = merge_result;   
                   }
-
-                  let merge_count = Math.floor(cards.length / 4);
-                  let merge_result = rewardMgr.card_merge(res, auto, merge_count);
-
-                  if( merge_result.success.length > 0 ){
-                    for( let i = 0; i < merge_result.success.length; i++ ){
-                      await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result.success[i], 1 );
-                    }                    
-                  } 
-
-                  if( merge_result.fail.length > 0 ){
-                    for( let i = 0; i < merge_result.fail.length; i++ ){
-                      await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result.fail[i], 1 );
-                    }                    
-                  } 
-
-                  res.resp["merge_result"] = merge_result;
-                  // else {
-                  //   res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_CARD_MERGE;
-                  // }
+                  
                 }
               }
             }
@@ -89,7 +103,7 @@ class cardmerge extends router_lib {
       session: { type: "string", desc: "user session" },
       uid: { type: "number", desc: "user id" },
       auto : { type:"number", desc : "auto merge flag 0- false, 1 > rarity" },
-      cards: { type: "string", desc: "user cards - auto value 0 means not auto merging" }
+      cards: { type: "string", desc: "JSON array of user card strings when auto is 0, e.g. [\"4001:1\",\"4002:3\"]" }
     }
 
     this.RESPONSE_DATA = {
