@@ -1,6 +1,6 @@
 const rewardMgr = require('../manager/rewardmanager');
 
-class Lib_Response {
+class Api_Response {
   constructor(res) {
     this.res = res;
   }
@@ -25,10 +25,10 @@ class Lib_Response {
 
   // res.complete(), res.completeText(msg) 사용 가능하게 연결
   static attach(res) {
-    const api = new Lib_Response(res);
+    const api = new Api_Response(res);
     res.complete = () => api.complete();
     res.completeText = (msg) => api.text(msg);
   }
 }
 
-module.exports = Lib_Response;
+module.exports = Api_Response;

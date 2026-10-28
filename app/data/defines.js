@@ -4,13 +4,6 @@ const USER_TYPE = Object.freeze({
   GUEST: 3,
 });
 
-const ERROR_CODE = Object.freeze({
-  SUCCESS: 0,
-  SESSION_INVALID: 10,
-  INVALID_PARAMETER: 1001,
-  NOT_FOUND: 1002,
-});
-
 const CHANNEL_TYPE = Object.freeze({
   GUEST: 0,
   APPLE: 1,
@@ -42,7 +35,6 @@ const SHOP_GOODS_TYPE = Object.freeze({
 
 module.exports = {
   USER_TYPE,
-  ERROR_CODE,
   CHANNEL_TYPE,
   SESSION_USE,
   REWARD_TYPE,

@@ -4,7 +4,7 @@ const DEF = require('../data/defines');
 const ERR = require('../data/errors');
 
 const userMgr = require('../manager/usermanager');
-const Lib_Response = require('../utils/lib_response');
+const API_Response = require('../utils/api_response');
 
 const geoip = require('geoip-country');
 
@@ -66,10 +66,12 @@ class LibRouter extends express.Router {
     }
 
     this.preRoute = async function(req, res){
-      Lib_Response.attach(res);
+      API_Response.attach(res);
       res.once('finish', () => {
         this.afterRoute(req, res).catch(err => global.logger.error("afterRoute error: %s", err));
       });
+      res.resp = {RESULT: ERR.ERROR_CODE.SUCCESS};
+
       this.ip_check(req);
       await this.session_check(req, res);
       await this.getRequestUserData(req, res);
@@ -101,8 +103,7 @@ class LibRouter extends express.Router {
       req.ip_address = ip_address;
     }
 
-    this.session_check = async function(req, res){
-      res.resp = {RESULT: ERR.ERROR_CODE.SUCCESS};
+    this.session_check = async function(req, res){      
       let reqparam = reqToParams(req);
       if( res.cached == undefined ){
         res.cached = {};

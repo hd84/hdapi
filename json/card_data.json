@@ -16,77 +16,77 @@
   {
     "idx": 4003,
     "name": "c",
-    "rarity": 2,
+    "rarity": 1,
     "img": 4003,
     "icon": "def"
   },
   {
     "idx": 4004,
     "name": "d",
-    "rarity": 3,
+    "rarity": 1,
     "img": 4004,
     "icon": "def"
   },
   {
     "idx": 4005,
     "name": "e",
-    "rarity": 4,
+    "rarity": 2,
     "img": 4005,
     "icon": "def"
   },
   {
     "idx": 4006,
     "name": "f",
-    "rarity": 1,
+    "rarity": 2,
     "img": 4006,
     "icon": "atk"
   },
   {
     "idx": 4007,
     "name": "g",
-    "rarity": 1,
+    "rarity": 2,
     "img": 4007,
     "icon": "atk"
   },
   {
     "idx": 4008,
     "name": "h",
-    "rarity": 1,
+    "rarity": 2,
     "img": 4008,
     "icon": "def"
   },
   {
     "idx": 4009,
     "name": "i",
-    "rarity": 1,
+    "rarity": 3,
     "img": 4009,
     "icon": "def"
   },
   {
     "idx": 4010,
     "name": "j",
-    "rarity": 1,
+    "rarity": 3,
     "img": 4010,
     "icon": "atk"
   },
   {
     "idx": 4011,
     "name": "k",
-    "rarity": 1,
+    "rarity": 3,
     "img": 4011,
     "icon": "atk"
   },
   {
     "idx": 4012,
     "name": "l",
-    "rarity": 1,
+    "rarity": 3,
     "img": 4012,
     "icon": "def"
   },
   {
     "idx": 4013,
     "name": "m",
-    "rarity": 1,
+    "rarity": 4,
     "img": 4013,
     "icon": "def"
   },
@@ -100,42 +100,42 @@
   {
     "idx": 4015,
     "name": "o",
-    "rarity": 3,
+    "rarity": 4,
     "img": 4015,
     "icon": "atk"
   },
   {
     "idx": 4016,
     "name": "p",
-    "rarity": 2,
+    "rarity": 4,
     "img": 4016,
     "icon": "def"
   },
   {
     "idx": 4017,
     "name": "q",
-    "rarity": 2,
+    "rarity": 5,
     "img": 4017,
     "icon": "def"
   },
   {
     "idx": 4018,
     "name": "r",
-    "rarity": 1,
+    "rarity": 5,
     "img": 4018,
     "icon": "atk"
   },
   {
     "idx": 4019,
     "name": "s",
-    "rarity": 1,
+    "rarity": 5,
     "img": 4019,
     "icon": "atk"
   },
   {
     "idx": 4020,
     "name": "t",
-    "rarity": 1,
+    "rarity": 6,
     "img": 4020,
     "icon": "atk"
   }
