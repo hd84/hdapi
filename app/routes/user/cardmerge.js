@@ -19,8 +19,10 @@ class cardmerge extends router_lib {
     this.postRoute = async function (req, res, param) {
       var type1 = param['type'];
       var uid = param['uid'];
+      let auto = param['auto'];
+      let cards = param['cards'];
 
-      global.logger.info("type1=%s, uid=%s", type1, uid);
+      global.logger.info("type1=%s, uid=%s, auto=%s, cards=%s", type1, uid, auto, cards);
 
       // db에 있는 데이터 읽어서 보낼때
       if (type1 == 'db') {                
@@ -50,8 +52,9 @@ class cardmerge extends router_lib {
 
     this.REQUEST_DATA = {
       session: { type: "string", desc: "user session" },
-      uid: { type: "number", desc: "user id" }
-      cardsn
+      uid: { type: "number", desc: "user id" },
+      auto : { type:"number", desc : "auto merge flag 0- false, 1 > rarity" },
+      cards: { type: "string", desc: "user cards - auto value 0 means not auto merging" }
     }
 
     this.RESPONSE_DATA = {

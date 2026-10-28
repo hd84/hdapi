@@ -14,5 +14,11 @@
 
   "session_use": 1,
   "session_expire": 3600,
-  "session_cheat" : "testman"
+  "session_cheat" : "testman",
+
+  "card_merge_rarity_1" : "20",
+  "card_merge_rarity_2" : "15",
+  "card_merge_rarity_3" : "12",
+  "card_merge_rarity_4" : "10",
+  "card_merge_rarity_5" : "10"
 }
