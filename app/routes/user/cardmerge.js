@@ -34,9 +34,7 @@ class cardmerge extends router_lib {
           if( ret_usercard != undefined ){
             if( auto == 0 ){
 
-            } else {              
-              //let merge_result = rewardMgr.card_merge(res, auto, 10);
-
+            } else {                            
               let cards = [];
               for(const card of ret_usercard) {
                 if( card.rarity == auto ){
@@ -50,21 +48,30 @@ class cardmerge extends router_lib {
                   }
 
                   let merge_count = Math.floor(cards.length / 4);
-                  if( merge_result.length > 0 ){
-                    for( let i = 0; i < merge_result.length; i++ ){
-                      await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result[i], -1 );
-                    }
-                    
-                  } else {
-                    res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_CARD_MERGE;
-                  }
+                  let merge_result = rewardMgr.card_merge(res, auto, merge_count);
+
+                  if( merge_result.success.length > 0 ){
+                    for( let i = 0; i < merge_result.success.length; i++ ){
+                      await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result.success[i], 1 );
+                    }                    
+                  } 
+
+                  if( merge_result.fail.length > 0 ){
+                    for( let i = 0; i < merge_result.fail.length; i++ ){
+                      await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result.fail[i], 1 );
+                    }                    
+                  } 
+
+                  res.resp["merge_result"] = merge_result;
+                  // else {
+                  //   res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_CARD_MERGE;
+                  // }
                 }
               }
             }
           }
                     
-          
-          res.resp["user_card"] = [];
+          res.complete();
           
         } else {
           res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
