@@ -34,18 +34,60 @@ class cardmerge extends router_lib {
           if( ret_usercard != undefined ){
             if( auto == 0 ){
               try {
-                let test_cards = JSON.parse(cards);
-                cards = test_cards;
+                let arr_cards = JSON.parse(cards);
+                let obj_use_card = {};
+
+                if( arr_cards && Array.isArray(arr_cards) ){
+                  for( const card_row of arr_cards ){
+                    // 여기서 card_row를 처리하는 로직을 추가해야 함
+                    let temp_arr = card_row.split( ":" );
+                    if( temp_arr.length != 2 ){
+                      global.logger.warn("Invalid card format: %s", card_row);
+                      res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
+                    } else {
+                      let card_id = parseInt(temp_arr[0]);
+                      let card_count = parseInt(temp_arr[1], 10);
+                      if( isNaN(card_count) || card_count <= 0 ){
+                        global.logger.warn("Invalid card count: %s", temp_arr[1]);
+                        res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
+                      } else {
+                        obj_use_card[card_id] = (obj_use_card[card_id] || 0) + card_count;
+                      }
+                    }
+                  }
+
+                  let keys = Object.keys(obj_use_card);
+                  for( const card_id of keys ){
+                    let card_count = obj_use_card[card_id];
+                    await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, parseInt(card_id), -card_count );
+                  }
+                }       
+                
+                if( res.resp.RESULT == ERR.ERROR_CODE.SUCCESS ){
+                    let merge_count = 1;
+                    let card_id = Object.keys(obj_use_card)[0];
+                    const card_data = global.GameData["card_data"][card_id];
+                    let merge_result = rewardMgr.card_merge(res, card_data.rarity, merge_count);
+                    if( merge_result.success.length > 0 ){
+                      for( let i = 0; i < merge_result.success.length; i++ ){
+                        await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result.success[i], 1 );
+                      }                    
+                    } 
+
+                    if( merge_result.fail.length > 0 ){
+                      for( let i = 0; i < merge_result.fail.length; i++ ){
+                        await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result.fail[i], 1 );
+                      }                    
+                    } 
+
+                    res.resp["merge_result"] = merge_result;  
+                }
               } catch (error) {
                 global.logger.warn("Invalid cards JSON: %s", error.message);
                 res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
               }
 
-              if( res.resp.RESULT == ERR.ERROR_CODE.SUCCESS &&
-                  (!Array.isArray(cards) || !cards.every(card => typeof card === 'string')) ){
-                global.logger.warn("Invalid cards parameter; expected an array of card strings");
-                res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
-              }
+              
             } else {                            
               let cards = [];
               for(const card of ret_usercard) {
@@ -83,10 +125,7 @@ class cardmerge extends router_lib {
                 }
               }
             }
-          }
-                    
-          res.complete();
-          
+          }                    
         } else {
           res.resp.RESULT = ERR.ERROR_CODE.NOT_FOUND_USER;
         }

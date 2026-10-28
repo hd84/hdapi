@@ -52,6 +52,12 @@ exports.resourceCheck = async function( res, type, value, count ) {
   
 }
 exports.rewardComplete = async function( res ) {
+  if( res.resp.RESULT != ERR.ERROR_CODE.SUCCESS ){
+    res.cached.reward_count = undefined;
+    res.cached.reward = undefined;
+    return;
+  }
+
   let user_card_object = {};
   let user_card_list = [];
   if( res.cached.reward == undefined || res.cached.reward.length == 0 ){
@@ -149,8 +155,7 @@ exports.gacha = async function( res, gacha_id ) {
   }
 }
 
-exports.card_merge = function( res, rarity, count ) {
-  global.GameData["card_data"]
+exports.card_merge = function( res, rarity, count ) {  
   let success_card_list = [];
   let fail_card_list = [];
   Object.keys(global.GameData["card_data"]).forEach(key => {
@@ -185,3 +190,4 @@ exports.card_merge = function( res, rarity, count ) {
   }
   return result_card;
 }
+
