@@ -79,3 +79,8 @@ exports.shop_goods_list = [{
     reward_id:{type:"number", desc : "reward ID"},
     count:{type:"number", desc : "reward count"},    
 }];
+
+exports.merge_result = [{
+    success:{type:"array", desc : "list of successfully merged card IDs"},
+    fail:{type:"array", desc : "list of failed merged card IDs"}
+}];

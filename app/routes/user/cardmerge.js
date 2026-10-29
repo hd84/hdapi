@@ -177,8 +177,9 @@ class cardmerge extends router_lib {
 
     this.RESPONSE_DATA = {
       RESULT:{ type: "number", desc : "result code" },
-      game_user: respMgr.game_user,
-      user_card: respMgr.user_card
+      game_user: respMgr.game_user,      
+      merge_result: respMgr.merge_result,
+      reward_list: respMgr.reward_list
     }
   }
 };
