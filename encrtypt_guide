@@ -8,6 +8,6 @@ var addr = './json/TB_INTRO_VOICE.ejs';
 
         ejsdata = data;
 
-        var decr = mcrypt.decrypt( ejsdata, null, 'ZKEncode!@3456&*', 'rijndael-128', 'cbc' );
+        var decr = mcrypt.decrypt( ejsdata, null, 'abcdtest1234%^&*', 'rijndael-128', 'cbc' );
         var a = 0;
     })

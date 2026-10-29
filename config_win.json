@@ -4,8 +4,5 @@
   
   "server_env": "dev",
   "serverIP": "127.0.0.1",
-  "serverPORT": 11122,
-  
-  "loglevel": 3,
-  "db_loglevel": 3
+  "serverPORT": 11122  
 }
