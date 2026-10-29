@@ -30,44 +30,75 @@ class cardmerge extends router_lib {
       if (type1 == 'db') {                        
         if( res.cached.userdata != undefined  ){
           res.resp.RESULT = 0;                    
-          let ret_usercard = await user_card.getCards(uid);
+          let ret_usercard = await user_card.getCards(uid);          
           if( ret_usercard != undefined ){
+            // 카드 합성을 수동진행
+            res.cached.usercard = ret_usercard;            
             if( auto == 0 ){
               try {
                 let arr_cards = JSON.parse(cards);
                 let obj_use_card = {};
+                let rarity = 0;
+                let obj_client_card = {};
 
+                // 클라에서 보내준 카드 정보 배열
+                // 카드 데이터 체크 및 희귀도 체크
                 if( arr_cards && Array.isArray(arr_cards) ){
                   for( const card_row of arr_cards ){
-                    // 여기서 card_row를 처리하는 로직을 추가해야 함
                     let temp_arr = card_row.split( ":" );
                     if( temp_arr.length != 2 ){
-                      global.logger.warn("Invalid card format: %s", card_row);
+                      global.logger.warn("Invalid card format: %s uid : %s", card_row, uid);
                       res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
                     } else {
-                      let card_id = parseInt(temp_arr[0]);
-                      let card_count = parseInt(temp_arr[1], 10);
-                      if( isNaN(card_count) || card_count <= 0 ){
-                        global.logger.warn("Invalid card count: %s", temp_arr[1]);
+                      let [card_id, card_count] = temp_arr.map(v => parseInt(v));
+                      const card_data = global.GameData["card_data"][card_id];
+                      if( card_data == undefined ){
+                        global.logger.warn("Invalid card id: %s uid : %s", card_id, uid);
                         res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
-                      } else {
-                        obj_use_card[card_id] = (obj_use_card[card_id] || 0) + card_count;
                       }
+                      if( rarity == 0 ){
+                        rarity = card_data.rarity;
+                      }
+
+                      if( card_data.rarity == rarity ){
+                        obj_use_card[card_id] = (obj_use_card[card_id] || 0) + card_count;
+                      } else {
+                        global.logger.warn("Card rarity does not match auto: %s uid : %s", card_id, uid);
+                        res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
+                      }
+                      obj_client_card[card_id] = card_count;
                     }
                   }
+                }
 
-                  let keys = Object.keys(obj_use_card);
+                // 카드 합성에 사용할 보유카드 수 확인
+                if( res.resp.RESULT == ERR.ERROR_CODE.SUCCESS ){
+                  let keys = Object.keys(obj_client_card);
                   for( const card_id of keys ){
-                    let card_count = obj_use_card[card_id];
+                    let card_count = obj_client_card[card_id];
+                    let ret_resource = await rewardMgr.resourceCheck(res, DEF.REWARD_TYPE.CARD, card_id, card_count);
+                    if( ret_resource != true){
+                      global.logger.warn("Insufficient card resources: %s uid : %s", card_id, uid);
+                      res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_RESOURCE;
+                      break;
+                    }
+                  }
+                }
+
+                // 합성할 카드 차감 목록에 삽입
+                if( res.resp.RESULT == ERR.ERROR_CODE.SUCCESS ){
+                  let keys = Object.keys(obj_client_card);
+                  for( const card_id of keys ){
+                    let card_count = obj_client_card[card_id];
                     await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, parseInt(card_id), -card_count );
                   }
-                }       
-                
+                }
+                                 
+
+                // 카드 합성 결과 처리
                 if( res.resp.RESULT == ERR.ERROR_CODE.SUCCESS ){
-                    let merge_count = 1;
-                    let card_id = Object.keys(obj_use_card)[0];
-                    const card_data = global.GameData["card_data"][card_id];
-                    let merge_result = rewardMgr.card_merge(res, card_data.rarity, merge_count);
+                    let merge_count = 1;                    
+                    let merge_result = rewardMgr.card_merge(res, rarity, merge_count);
                     if( merge_result.success.length > 0 ){
                       for( let i = 0; i < merge_result.success.length; i++ ){
                         await rewardMgr.reward( res, DEF.REWARD_TYPE.CARD, merge_result.success[i], 1 );
@@ -83,12 +114,11 @@ class cardmerge extends router_lib {
                     res.resp["merge_result"] = merge_result;  
                 }
               } catch (error) {
-                global.logger.warn("Invalid cards JSON: %s", error.message);
+                global.logger.warn("Invalid cards JSON: %s uid : %s", error.message, uid);
                 res.resp.RESULT = ERR.ERROR_CODE.INVALID_PARAMETER;
-              }
-
-              
-            } else {                            
+              }             
+            } else {       
+              // 자동 합성일때                     
               let cards = [];
               for(const card of ret_usercard) {
                 if( card.rarity == auto ){
@@ -96,15 +126,15 @@ class cardmerge extends router_lib {
                     cards.push(card);
                   }
                   
-                  if( cards.length < 4 ){
+                  if( cards.length < global.config.card_merge_count ){
                     res.resp.RESULT = ERR.ERROR_CODE.NOT_ENOUGH_CARD_MERGE;
                   } else {
-                    let remain_card_count = cards.length % 4;
+                    let remain_card_count = cards.length % global.config.card_merge_count;
                     if( remain_card_count > 0 ){
                       cards.splice( -remain_card_count, remain_card_count);
                     }
 
-                    let merge_count = Math.floor(cards.length / 4);
+                    let merge_count = Math.floor(cards.length / global.config.card_merge_count);
                     let merge_result = rewardMgr.card_merge(res, auto, merge_count);
 
                     if( merge_result.success.length > 0 ){

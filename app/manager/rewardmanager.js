@@ -39,6 +39,10 @@ exports.resourceCheck = async function( res, type, value, count ) {
     return false;
   }
 
+  if( type == DEF.REWARD_TYPE.CARD && res.cached.usercard == undefined ){
+    res.cached.usercard = await user_card.getCards(res.cached.uid);
+  }
+
   switch ( type ) {
     case DEF.REWARD_TYPE.GOLD:
       return (userdata.gold || 0) >= count;
@@ -46,6 +50,10 @@ exports.resourceCheck = async function( res, type, value, count ) {
       return (userdata.gem_paid || 0) >= count;
     case DEF.REWARD_TYPE.GEM_FREE:
       return (userdata.gem_free || 0) >= count;
+    case DEF.REWARD_TYPE.CARD:
+      let usercard = res.cached.usercard || [];
+      let card = usercard.find(c => c.did == value);
+      return card && card.count >= count;
     default:
       return false;
   }
