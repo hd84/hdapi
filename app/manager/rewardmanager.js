@@ -27,6 +27,11 @@ exports.reward = async function( res, type, value, count ) {
   if( res.cached.reward_count == undefined ){
     res.cached.reward_count = {};
   }
+
+  if( type == DEF.REWARD_TYPE.CARD && res.cached.usercard == undefined ){
+    res.cached.usercard = await user_card.getCards(res.cached.uid);
+  }
+  
   res.cached.reward.push({type: num_type, value: num_value, count: num_count});
   res.cached.reward_count[num_type] = (res.cached.reward_count[num_type] || 0) + 1;  
 }
@@ -53,7 +58,12 @@ exports.resourceCheck = async function( res, type, value, count ) {
     case DEF.REWARD_TYPE.CARD:
       let usercard = res.cached.usercard || [];
       let card = usercard.find(c => c.did == value);
-      return card && card.count >= count;
+      if( card != undefined && card.count >= count) {
+        card.count = card.count - count;
+        return true;
+      } else {
+        return false;
+      }      
     default:
       return false;
   }
