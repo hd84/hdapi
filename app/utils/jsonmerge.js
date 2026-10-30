@@ -1,6 +1,9 @@
 
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
+
+const encrypt = require("./encrypt");
 
 exports.mergejson = function (params) {  
   const jsonDir = path.join(__dirname, "../../json");
@@ -39,6 +42,16 @@ exports.mergejson = function (params) {
     "GameData loaded: %s",
     Object.keys(jsonArray).join(", "),
   );  
+
+  encrypt.encode_file(path.join(jsonDir, "merged.json"));
+  let js = encrypt.decode_json(fs.readFileSync(path.join(jsonDir, "merged.json.enc")));
+  if (JSON.stringify(js) !== JSON.stringify(retObj)) {
+    global.logger.error("merged.json.enc decode verification failed");
+  }
+  
+
+  
 };
+
 
 module.exports = exports;

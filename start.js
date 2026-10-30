@@ -243,6 +243,7 @@ async function _main() {
     process.exit(1);
     // Unity request mode handling
   } else if( global.launch_config_args["mode"] === "jsonmerge") {
+    await _setKeyData();
     const jsonmerge = require('./app/utils/jsonmerge.js');
     jsonmerge.mergejson();
     process.exit(1);
@@ -260,6 +261,20 @@ async function _setDefinedata() {
     });
   } else {
     global.GAME_DEFINE = {};
+  }
+}
+
+async function _setKeyData() {
+  const KEY_OBJECT = require('./table/key_data.js');
+  const keyData = await KEY_OBJECT.getKeyData();
+  if (keyData != undefined) {
+    global.KEY_DATA = {};
+
+    keyData.forEach(row => {
+      global.KEY_DATA[row.key] = row.value;
+    });
+  } else {
+    global.KEY_DATA = {};
   }
 }
 
