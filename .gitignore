@@ -6,3 +6,4 @@ logs/
 db.json
 db_ocl.json
 db_mac.json
+*.enc
