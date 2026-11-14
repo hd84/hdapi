@@ -113,7 +113,7 @@ class DB_TABLE {
     const result = await query;
     if (primaryKey && result && result[0] !== undefined) {
       this[primaryKey] = result[0];
-      this[`old_${primaryKey}`] = result[0];
+      this[`old_${primaryKey}`] = result[0];      
     }
 
     return result;
@@ -125,6 +125,7 @@ class DB_TABLE {
     for (const key of Object.keys(this)) {
       if (ignore_keys.includes(key)) continue;
       if( key.startsWith('old_')) continue;
+      if (typeof this[key] === 'function') continue;
 
       const value = this[key];
       const isDateTime = value instanceof Date ||
