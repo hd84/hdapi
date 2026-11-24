@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RESTful API Test</title>
   <style>
+    :root {
+      --restful-color: <%= restful_color %>;
+    }
     body {
       font-family: 'Inter', 'Noto Sans KR', 'Roboto', Arial, sans-serif;
       background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -51,7 +54,7 @@
     }
     .left li a {
       text-decoration: none;
-      color: #2563eb;
+      color: var(--restful-color);
       font-weight: 500;
       padding: 8px 12px;
       display: block;
@@ -64,11 +67,11 @@
     }
     .left li:hover a {
       background: #f3f6fa;
-      color: #2563eb;
+      color: var(--restful-color);
     }
     .left li a:hover {
       background: #f3f6fa;
-      color: #2563eb;
+      color: var(--restful-color);
     }
     .modern-input {
       width: 100%;
@@ -83,11 +86,11 @@
       box-sizing: border-box;
       color: #222;
       font-family: 'Inter', 'Noto Sans KR', 'Roboto', Arial, sans-serif;
-      box-shadow: 0 1px 2px rgba(37,99,235,0.04);
+      box-shadow: 0 1px 2px color-mix(in srgb, var(--restful-color) 4%, transparent);
     }
     .modern-input:focus {
-      border: 1.5px solid #2563eb;
-      box-shadow: 0 4px 16px rgba(37,99,235,0.10);
+      border: 1.5px solid var(--restful-color);
+      box-shadow: 0 4px 16px color-mix(in srgb, var(--restful-color) 10%, transparent);
       background: #fff;
     }
     .modern-input::placeholder {
@@ -111,15 +114,15 @@
       transition: box-shadow 0.2s, border 0.2s;
     }
     #apiForm button {
-      background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+      background: linear-gradient(90deg, var(--restful-color) 0%, color-mix(in srgb, var(--restful-color) 78%, white) 100%);
       color: #fff;
       font-weight: 600;
       border: none;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--restful-color) 8%, transparent);
     }
     #apiForm button:hover {
-      background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
+      background: linear-gradient(90deg, color-mix(in srgb, var(--restful-color) 78%, black) 0%, var(--restful-color) 100%);
     }
     label {
       font-weight: 500;
@@ -153,7 +156,7 @@
     .right h2 {
       margin-top: 0;
       font-size: 1.2rem;
-      color: #2563eb;
+      color: var(--restful-color);
     }
     #result {
       background: #f1f5f9;
@@ -172,14 +175,14 @@
       font-size: 1.6rem;
       font-weight: 700;
       letter-spacing: -1px;
-      color: #2563eb;
+      color: var(--restful-color);
       margin-bottom: 0.5em;
       margin-top: 0;
-      text-shadow: 0 2px 8px rgba(37,99,235,0.08);
+      text-shadow: 0 2px 8px color-mix(in srgb, var(--restful-color) 8%, transparent);
     }
     .spinner {
-      border: 3px solid rgba(37, 99, 235, 0.1);
-      border-left-color: #2563eb;
+      border: 3px solid color-mix(in srgb, var(--restful-color) 10%, transparent);
+      border-left-color: var(--restful-color);
       border-radius: 50%;
       width: 24px;
       height: 24px;
@@ -219,8 +222,8 @@
     }
     .copy-btn:hover {
       background: #f1f5f9;
-      color: #2563eb;
-      border-color: #2563eb;
+      color: var(--restful-color);
+      border-color: var(--restful-color);
     }
     .cate-btn {
       padding: 4px 8px;
@@ -234,13 +237,13 @@
     }
     .cate-btn:hover {
       background: #f1f5f9;
-      color: #2563eb;
-      border-color: #2563eb;
+      color: var(--restful-color);
+      border-color: var(--restful-color);
     }
     .cate-btn.active {
-      background: #2563eb;
+      background: var(--restful-color);
       color: #fff;
-      border-color: #2563eb;
+      border-color: var(--restful-color);
     }
     .top-tabs { display: flex; gap: 4px; justify-content: center; margin-top: 8px; padding-bottom: 8px; margin-bottom: 12px; border-bottom: 1px solid #cbd5e1; }
     .top-tabs a {
@@ -252,8 +255,8 @@
       text-decoration: none;
       font-weight: 600;
     }
-    .top-tabs a:hover { color: #2563eb; border-color: #2563eb; }
-    .top-tabs a.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .top-tabs a:hover { color: var(--restful-color); border-color: var(--restful-color); }
+    .top-tabs a.active { background: var(--restful-color); color: #fff; border-color: var(--restful-color); }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/renderjson@1.4.0/renderjson.min.js"></script>
 </head>
@@ -263,7 +266,7 @@
     <a href="/restful" class="active">API</a>
     <a href="/document">Document</a>
   </div>
-  <h1>Game REST API <%= `${version}` %> </h1>
+  <h1>Game Restful API <%= `${version}` %> </h1>
   <div class="container">
     <div id="hiddenData" style="display: none;">
       <%- JSON.stringify(mapRoute) %>
@@ -298,7 +301,7 @@
           <option value="DELETE">DELETE</option>
           -->
         </select>
-        <div id="selectedEndpoint" style="margin-bottom: 5px; font-weight: bold; color: #2563eb;"></div>
+        <div id="selectedEndpoint" style="margin-bottom: 5px; font-weight: bold; color: var(--restful-color);"></div>
         <label for="body">Request Param</label>
         <div id="div_request"></div>
         <div style="display: flex; align-items: center;">

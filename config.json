@@ -1,6 +1,6 @@
 {
   "name": "Restful",
-  "version": "261029A",
+  "version": "261124A",
   
   "server_env": "local",
   "serverIP": "127.0.0.1",
@@ -11,6 +11,9 @@
   "session_use": 1,
   "session_expire": 3600,
   "session_cheat" : "testman",
+
+  "restful_color" : "#1c00cf",
+  "document_color" : "#1c00cf",
 
   "card_merge_count" : 4,
   "card_merge_rarity_1" : 20,

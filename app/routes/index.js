@@ -28,12 +28,12 @@ router.get('/restful', async function (req, res) {
     await telegram.sendMessage('7982261390:AAH3ZXr_vxAGedUy0vrmEi_e5mSjtFu1Kfo', '-4532049856', `[[${server_env}]] restful page access\n IP: ${clientIp}`, { parse_mode: 'Markdown' });
   }
   
-  res.render('restful', { title: 'GameSv', msg: msg, errCode: errCode, mapRoute: global.MapRouter, version: global.config.version });
+  res.render('restful', { title: 'GameSv', msg: msg, errCode: errCode, mapRoute: global.MapRouter, version: global.config.version, restful_color: global.config.restful_color || '#198C6B' });
 
 });
 
 router.get('/document', function (req, res) {
-  res.render('document', { mapRoute: global.MapRouter, version: global.config.version });
+  res.render('document', { mapRoute: global.MapRouter, version: global.config.version, document_color: global.config.document_color || '#198C6B' });
 });
 
 router.get('/login', function (req, res) {

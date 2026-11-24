@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>API Document</title>
   <style>
+    :root {
+      --document-color: <%= document_color %>;
+    }
     body {
       font-family: 'Inter', 'Noto Sans KR', 'Roboto', Arial, sans-serif;
       background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -20,10 +23,10 @@
       font-size: 1.6rem;
       font-weight: 700;
       letter-spacing: -1px;
-      color: #2563eb;
+      color: var(--document-color);
       margin-bottom: 0.5em;
       margin-top: 0;
-      text-shadow: 0 2px 8px rgba(37,99,235,0.08);
+      text-shadow: 0 2px 8px color-mix(in srgb, var(--document-color) 8%, transparent);
     }
     .container {
       display: flex;
@@ -47,7 +50,7 @@
     .left li { list-style: none; margin-bottom: 2px; border-radius: 8px; }
     .left li a {
       text-decoration: none;
-      color: #2563eb;
+      color: var(--document-color);
       font-weight: 500;
       padding: 8px 12px;
       display: block;
@@ -63,8 +66,8 @@
       font-size: 0.75rem;
       color: #334155;
     }
-    .cate-btn:hover { background: #f1f5f9; color: #2563eb; border-color: #2563eb; }
-    .cate-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .cate-btn:hover { background: #f1f5f9; color: var(--document-color); border-color: var(--document-color); }
+    .cate-btn.active { background: var(--document-color); color: #fff; border-color: var(--document-color); }
     .right {
       flex: 1;
       min-width: 0;
@@ -75,7 +78,7 @@
       box-sizing: border-box;
     }
     .api { background: #f1f5f9; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    .api h2 { margin: 0 0 8px; font-size: 1.1rem; color: #2563eb; }
+    .api h2 { margin: 0 0 8px; font-size: 1.1rem; color: var(--document-color); }
     .api h3 { margin: 12px 0 6px; font-size: 0.9rem; color: #334155; }
     table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: #fff; }
     th, td { border: 1px solid #e0e7ef; padding: 4px 8px; text-align: left; }
@@ -97,8 +100,8 @@
       text-decoration: none;
       font-weight: 600;
     }
-    .top-tabs a:hover { color: #2563eb; border-color: #2563eb; }
-    .top-tabs a.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .top-tabs a:hover { color: var(--document-color); border-color: var(--document-color); }
+    .top-tabs a.active { background: var(--document-color); color: #fff; border-color: var(--document-color); }
   </style>
 </head>
 
